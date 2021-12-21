@@ -1,0 +1,61 @@
+package com.vinade.todorooms
+
+
+import android.util.Log
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+
+class DataBase {
+    private lateinit var database: DatabaseReference
+    val list = mutableListOf<Room>()
+    get() = field
+    fun initDatabase(){
+        database = Firebase.database.reference
+    }
+    fun getReference():DatabaseReference{
+        return database
+    }
+
+    fun writeNewRoom(room: Room){
+        database.child("Rooms").child(room.id).setValue(room)
+    }
+
+    fun writeNewTask(task: Task, roomId : String){
+        database.child("Rooms").child(roomId).child("tasks").child(task.id).setValue(task)
+    }
+
+    fun readAllRooms(roomAdapter: RoomAdapter, recyclerView: RecyclerView){
+
+        database.child("Rooms").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(snapshotError: DatabaseError) {
+                TODO("not implemented")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                for (objSnapshot in snapshot.getChildren()) {
+                    val myClass= objSnapshot.getValue<Room>(Room::class.java)
+                    list.add(myClass!!)
+                }
+                roomAdapter.setRoomList(list)
+                recyclerView.adapter = roomAdapter
+            }
+        })
+    }
+
+    fun readRoomById(id : String){
+        database.child("Rooms").child(id).get().addOnSuccessListener {
+            val item = it.getValue(Room::class.java)
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+    }
+
+
+
+}

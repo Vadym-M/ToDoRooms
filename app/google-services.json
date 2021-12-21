@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "871975401262",
+    "project_id": "todorooms-5f9a5",
+    "storage_bucket": "todorooms-5f9a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871975401262:android:8cb359cad85f274b55acbf",
+        "android_client_info": {
+          "package_name": "com.vinade.todorooms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871975401262-qgf64q6lbp1qrcs77k8p3iki8lqai1hc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvsLujeb9nyzGvJvZIbGlpL6CKc4sowBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871975401262-qgf64q6lbp1qrcs77k8p3iki8lqai1hc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

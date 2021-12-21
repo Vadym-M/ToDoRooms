@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ToDoRooms" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/black_coffee</item>
+        <item name="colorOnPrimary">@color/dim_gray</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/gray_web</item>
+        <item name="colorSecondaryVariant">@color/gray_web</item>
+        <item name="colorOnSecondary">@color/dim_gray</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
