@@ -1,19 +1,26 @@
 package com.vinade.todorooms
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -37,6 +44,11 @@ class TaskFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var roomActivity: RoomActivity
+    private lateinit var layout: FrameLayout
+    private lateinit var thisView: View
+    private lateinit var floatingBtn: FloatingActionButton
+
+
     val expanded = arrayListOf<String>()
     val arrayList = arrayListOf<TaskAdapter>()
 
@@ -56,24 +68,12 @@ class TaskFragment : Fragment() {
         initActivity()
         val view = inflater.inflate(R.layout.fragment_task, container, false)
         //my code
-        val groupedItemList = arrayListOf<Task>()
-        val listItems = arrayListOf<ItemTask>()
-        listItems.add(ItemTask("one"))
-        listItems.add(ItemTask("two"))
-        listItems.add(ItemTask("three"))
-        listItems.add(ItemTask("four"))
-        listItems.add(ItemTask("five"))
-        listItems.add(ItemTask("six"))
-
-        val task = Task("Test", listItems)
-
-        groupedItemList.add(task)
-
-
+        thisView = view
+        layout = view.findViewById(R.id.layout_fragment_task)
         //
-        val btnCreate = view.findViewById<FloatingActionButton>(R.id.btnCreateTask)
+        floatingBtn = view.findViewById<FloatingActionButton>(R.id.btnCreateTask)
         showTasks(view)
-        btnCreate.setOnClickListener {
+        floatingBtn.setOnClickListener {
         //showdialog()
             showDialog()
         }
@@ -110,6 +110,56 @@ class TaskFragment : Fragment() {
         db.readRoomById(roomID)
     }
 
+    fun removeItem(id:String, task:Task){
+        Log.d("tag", "removeItem: count "+ arrayList.size)
+        val array = arrayList
+        for (item in array) {
+             if(item.task.id == task.id){
+                 Log.d("tag", "Jest taki id")
+                 for(itm in item.task.items){
+                     if(itm.id.equals(id)){
+                         val db = DataBase()
+                         db.initDatabase()
+                         val index = item.task.items.indexOf(itm)
+
+                         Snackbar.make(layout, "${itm.text} done!", Snackbar.LENGTH_LONG).addCallback(
+                             object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                                 override fun onShown(transientBottomBar: Snackbar?) {
+                                     super.onShown(transientBottomBar)
+                                     floatingBtn.visibility = View.GONE
+                                 }
+
+                                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                     super.onDismissed(transientBottomBar, event)
+                                     floatingBtn.visibility = View.VISIBLE
+                                 }
+                             }
+                         ).setAction("Return"){
+                             item.task.items.add(index, itm)
+                             db.updateItems(getRoomId(), item.task.id, item.task.items)
+                         }.show()
+
+                         item.task.items.remove(itm)
+                         Log.d("tag", "item was romoved")
+
+                         db.updateItems(getRoomId(), item.task.id, item.task.items)
+
+                         val timer = object: CountDownTimer(3000, 1000) {
+                             override fun onTick(millisUntilFinished: Long) {}
+
+                             override fun onFinish() {
+
+                             }
+                         }
+                         timer.start()
+                         break
+                     }
+                 }
+             }
+        }
+
+    }
+
 
     private fun showDialog() {
         val dialog = activity?.let { Dialog(it) }
@@ -133,6 +183,9 @@ class TaskFragment : Fragment() {
         dialog.show()
 
     }
+    fun getRootLayout(): FrameLayout{
+        return layout
+    }
     fun addExpand(itm:String){
         Log.d("tag", "addExpand")
         expanded.add(itm)
@@ -151,7 +204,6 @@ class TaskFragment : Fragment() {
 
 
 
-        //insertData(concatAdapter,arrayList )
         ref.child("Rooms").child(getRoomId()).child("tasks").addValueEventListener(object : ValueEventListener {
 
             override fun onCancelled(snapshotError: DatabaseError) {
@@ -159,7 +211,7 @@ class TaskFragment : Fragment() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                arrayList.clear()
                 listTask.clear()
 
 
@@ -173,16 +225,6 @@ class TaskFragment : Fragment() {
                 for(item in listTask){
 
                     val adapter = TaskAdapter(item, context, this@TaskFragment)
-//                    if(!secondArrayList.isEmpty()){
-//                        Log.d("tag", "IN LOOP")
-//                        secondArrayList.forEach(){
-//                            Log.d("tag", "ID of item: " + item.id + " And list id: "+ it.task.id)
-//                            if(list.task.id == item.id){
-//                                Log.d("tag", "IN LOOP: "+ list.isExpanded)
-//                                adapter.isExpanded = list.isExpanded
-//                            }
-//                        }
-//                    }
                     adapter.initRoomID(getRoomId())
                     arrayList.add(adapter)
                 }
@@ -192,9 +234,6 @@ class TaskFragment : Fragment() {
                 recyclerView.layoutManager = LinearLayoutManager(context)
                 recyclerView.adapter = concatAdapter
 
-
-
-                Log.d("tag", "Expand is: " + expanded.size + " and arralist: "+ arrayList.size)
                 for (arr in arrayList){
                     for (ex in expanded){
                         if(arr.task.id == ex){
@@ -203,85 +242,30 @@ class TaskFragment : Fragment() {
                         }
                     }
                 }
-                //expanded.clear()
-
-//                arrayList.get(5).changeExpand()
-//                concatAdapter.notifyDataSetChanged()
-                arrayList.clear()
-               // Log.d("tag", "EXPAND: " + arrayList.get(5).isExpanded)
 
 
-//                    listTask.forEach {
-//                        for (arr in oldArray) {
-//                            if (!arr.task.id.equals(it.id)) {
-//                                insertNewTask(concatAdapter, arrayList, it)
-//                            }
-//                        }
-//                    }
-
-
-
-//                ref.child("Rooms").child(getRoomId()).child("tasks").addValueEventListener(object : ValueEventListener {
-//
-//                    override fun onCancelled(snapshotError: DatabaseError) {
-//                        TODO("not implemented")
-//                    }
-//
-//                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        val data = arrayListOf<Task>()
-//                        Log.d("tag","SIZE : " + arrayList.size)
-//
-//
-//                        for (objSnapshot in snapshot.getChildren()) {
-//                            var task = objSnapshot.getValue<Task>(Task::class.java)
-//                            if(task != null){
-//                                var check = false
-//                            for (arr in arrayList){
-//                                Log.d("tag","Array : ")
-//                                if(arr.task.id.equals(task.id)){
-//                                    check = true
-//                                }
-//                            }
-//                            if(!check){
-//                                val array = TaskAdapter(task, context)
-//                                arrayList.add(0,array)
-//                                Log.d("tag","SECOND SIZE : " + arrayList.size + " And new task: "+ task.title)
-//                                concatAdapter = ConcatAdapter(concatAdapterConfig,arrayList)
-//                                recyclerView.layoutManager = LinearLayoutManager(context)
-//                                recyclerView.adapter = concatAdapter
-//                                check = false
-//                                Log.d("tag","HEREUOS" +  "  task: ")
-//                            }}
-//                            data.add(task!!)
-//
-//                        }
-//
-//                        for (items in concatAdapter.adapters){
-//
-//                        }
-//                    }})
-                    }
+            }
         })
-
-
-
-
-
-
-
-        val db = DataBase()
-        db.initDatabase()
-
-        //db.readAllTasksbyId(id, taskAdapter, recyclerView)
     }
 
+    fun listenerDatabase(){
 
+    }
     fun getRoomId():String{
         val roomID = roomActivity.getRoomId()
         return  roomID
     }
     fun initActivity(){
         roomActivity = activity as RoomActivity
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context?.hideKeyboard(thisView)
+    }
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

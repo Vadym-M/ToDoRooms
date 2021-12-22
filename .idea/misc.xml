@@ -10,6 +10,7 @@
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/activity_task.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/bottom_sheet_create.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/bottom_sheet_create_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/bottom_sheet_edit_task_title.xml" value="0.278125" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/bottom_sheet_room.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/custom_dialog.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/fragment_card.xml" value="0.36666666666666664" />
@@ -18,6 +19,7 @@
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/row_layout_activity_main.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/layout/row_layout_task_fragment.xml" value="0.264" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/menu/menu.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/menu/options_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/vadim/AndroidStudioProjects/ToDoRooms/app/src/main/res/xml/searchable.xml" value="0.20520833333333333" />
       </map>
     </option>

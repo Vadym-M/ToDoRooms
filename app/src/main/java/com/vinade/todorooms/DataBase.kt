@@ -55,7 +55,21 @@ class DataBase {
             Log.e("firebase", "Error getting data", it)
         }
     }
+    fun updateItems(roomId: String, taskId: String, items: ArrayList<ItemTask>){
+        database.child("Rooms").child(roomId).child("tasks").child(taskId).child("items").setValue(items)
+    }
+    fun updateTitleTask(roomId: String, task: Task, newTitle: String){
+        database.child("Rooms").child(roomId).child("tasks").child(task.id).child("title").setValue(newTitle)
+    }
+    fun removeTask(roomId: String, task: Task){
+        database.child("Rooms").child(roomId).child("tasks").child(task.id).removeValue()
+    }
+    fun removeAllItems(roomId: String, task: Task){
+        database.child("Rooms").child(roomId).child("tasks").child(task.id).child("items").removeValue()
+    }
 
 
 
 }
+
+

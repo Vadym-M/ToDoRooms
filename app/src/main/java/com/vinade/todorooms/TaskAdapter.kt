@@ -1,12 +1,11 @@
 package com.vinade.todorooms
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 
 class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragment): RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     var roomID = ""
@@ -31,8 +30,10 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
         class HeaderViewHolder(itemView: View): ViewHolder(itemView){
             private val headerTextView = itemView.findViewById<TextView>(R.id.title_task)
             private val btnAddItem = itemView.findViewById<Button>(R.id.add_item)
+            private val btnOptoinItem = itemView.findViewById<TextView>(R.id.textViewOptions)
             lateinit var context:Context
             lateinit var roomID:String
+            val db = initDatabase()
             fun initContext(context: Context){
                 this.context = context
             }
@@ -40,15 +41,51 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 roomID = id
             }
 
-            fun onBind(header: Task, onClickListener: View.OnClickListener){
-                headerTextView.text = header.title
-
+            fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: FrameLayout){
+                headerTextView.text = task.title
                 itemView.setOnClickListener {
                    onClickListener.onClick(it)
                 }
                 btnAddItem.setOnClickListener {
-                    showBottomSheet(header)
+                    showBottomSheet(task)
                 }
+                btnOptoinItem.setOnClickListener {
+                    val popup = PopupMenu(context, btnOptoinItem)
+                    popup.inflate(R.menu.options_menu)
+                    popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                        when (item!!.itemId) {
+                            R.id.edit_item -> {
+                                showBottomSheetEditTitle(task, fragmentLayout)
+
+                            }
+                            R.id.remove_item -> {
+                                removeTask(task, fragmentLayout)
+                            }
+                            R.id.done_item -> {
+                                removeAllItems(task, fragmentLayout)
+                            }
+                        }
+
+                        true
+                    })
+
+                    popup.show()
+                }
+
+            }
+            fun removeTask(task: Task, layout: FrameLayout){
+                db.removeTask(roomID, task)
+                Snackbar.make(layout, "${task.title} removed!", Snackbar.LENGTH_SHORT).show()
+            }
+            fun removeAllItems(task: Task, layout: FrameLayout){
+                db.removeAllItems(roomID, task)
+                Snackbar.make(layout, "All done!", Snackbar.LENGTH_SHORT).show()
+            }
+            fun initDatabase(): DataBase{
+                val db = DataBase()
+                db.initDatabase()
+                return db
             }
 
             fun showBottomSheet(task:Task){
@@ -68,9 +105,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 btnAdd.setOnClickListener {
                     val data = input.text.toString()
                     val item = ItemTask(data)
-                    val db = DataBase()
                     task.addItem(item)
-                    db.initDatabase()
                     db.writeNewTask(task,roomID)
 
                 }
@@ -79,12 +114,41 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 dialog.show()
 
             }
-        }
-        class ItemViewHolder(itemView: View): ViewHolder(itemView){
-            private val itemTextView = itemView.findViewById<CheckBox>(R.id.item_of_task)
+            fun showBottomSheetEditTitle(task: Task, layout: FrameLayout){
+                val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-            fun onBind(item: ItemTask){
-                itemTextView.text = item.text
+                val dialog = BottomSheetDialog(context)
+                val view = inflater.inflate(R.layout.bottom_sheet_edit_task_title, null)
+                val editText = view.findViewById<EditText>(R.id.editText_edit_title)
+                val btn = view.findViewById<Button>(R.id.btn_edit_task_title)
+                editText.setText(task.title)
+                editText.requestFocus()
+                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) // show and hide bottom sheet
+                dialog.setContentView(view)
+                dialog.show()
+                btn.setOnClickListener {
+                    val db = DataBase()
+                    db.initDatabase()
+                    db.updateTitleTask(roomID, task, editText.text.toString())
+                    dialog.dismiss()
+                    Snackbar.make(layout, "Title changed!", Snackbar.LENGTH_SHORT).show()
+                }
+
+
+        }
+
+        }
+
+        class ItemViewHolder(itemView: View): ViewHolder(itemView){
+            private val itemCheckBoxView = itemView.findViewById<CheckBox>(R.id.item_of_task)
+
+            fun onBind(item: ItemTask, roomID: String, task:Task, fragment: TaskFragment){
+                itemCheckBoxView.text = item.text
+
+                itemCheckBoxView.setOnCheckedChangeListener { buttonView, isChecked ->
+                   fragment.removeItem(item.id, task)
+
+                }
             }
         }
 
@@ -112,11 +176,11 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
         is ViewHolder.HeaderViewHolder -> {
             context?.let { holder.initContext(it) }
             holder.initRoomID(roomID)
-            holder.onBind(task, onHeaderClicked())
+            holder.onBind(task, onHeaderClicked(), fragment.getRootLayout())
 
         }
         is ViewHolder.ItemViewHolder -> {
-            holder.onBind(task.items[position - 1])
+            holder.onBind(task.items[position-1], roomID, task, fragment)
         }
     }
     }
