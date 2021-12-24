@@ -1,6 +1,8 @@
 package com.vinade.todorooms
 
 import android.content.Context
+import android.os.CountDownTimer
+import android.os.Handler
 import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
@@ -123,7 +125,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 val btn = view.findViewById<Button>(R.id.btn_edit_task_title)
                 editText.setText(task.title)
                 editText.requestFocus()
-                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) // show and hide bottom sheet
+                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
                 dialog.setContentView(view)
                 dialog.show()
                 btn.setOnClickListener {

@@ -77,7 +77,7 @@ class CardFragment : Fragment() {
                     arrayData.add(card!!)
                 }
                 recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = CardAdapter(arrayData)
+                recycler.adapter = context?.let { CardAdapter(arrayData, it) }
             }
         })
     }

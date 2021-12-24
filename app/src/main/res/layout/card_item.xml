@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    android:id="@+id/card_item"
+<com.google.android.material.card.MaterialCardView android:id="@+id/card_item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_margin="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -18,22 +19,31 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="bottom"
+                    android:textStyle="bold"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
 
-            <TextView
-                android:id="@+id/card_title"
-                android:layout_weight="1"
-                android:layout_gravity="bottom"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            <TextView
-                android:id="@+id/card_textViewOptions"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="&#8942;"
-                android:textAppearance="?android:textAppearanceLarge" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/card_remove_item"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:gravity="top|right"
+                    app:icon="@drawable/close"
+                    app:iconGravity="top" />
+            </RelativeLayout>
+
 
 
         </LinearLayout>
@@ -47,12 +57,14 @@
                 android:id="@+id/card_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:text="TextView" />
         </LinearLayout>
         <TextView
             android:id="@+id/card_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:layout_marginTop="10dp"
             android:layout_gravity="end|bottom"
