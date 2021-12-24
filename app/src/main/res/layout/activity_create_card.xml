@@ -7,11 +7,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".CreateCardActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/card_create_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/card_create_back"
+            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+            app:rippleColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/backspace" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/card_create_done"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            app:rippleColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="done"
+            app:icon="@drawable/check" />
+
+    </RelativeLayout>
+</LinearLayout>
+
     <EditText
         android:id="@+id/card_create_title"
         android:layout_width="match_parent"

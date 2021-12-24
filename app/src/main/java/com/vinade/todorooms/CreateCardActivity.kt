@@ -19,6 +19,7 @@ class CreateCardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+        supportActionBar?.hide()
         config()
 
         setContentView(R.layout.activity_create_card)
