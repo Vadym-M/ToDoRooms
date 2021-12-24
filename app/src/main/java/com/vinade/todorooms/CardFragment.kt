@@ -76,8 +76,9 @@ class CardFragment : Fragment() {
                     val card = objSnapshot.getValue<Card>(Card::class.java)
                     arrayData.add(card!!)
                 }
+                arrayData.sortBy { it.dateTime }
                 recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = context?.let { CardAdapter(arrayData, it) }
+                recycler.adapter = context?.let { CardAdapter(arrayData, it, getRoomId()) }
             }
         })
     }

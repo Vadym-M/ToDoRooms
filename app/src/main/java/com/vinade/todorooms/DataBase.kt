@@ -70,6 +70,9 @@ class DataBase {
     fun writeNewCard(roomId: String, card:Card){
         database.child("Rooms").child(roomId).child("cards").child(card.id).setValue(card)
     }
+    fun removeCard(roomId: String, card:Card){
+        database.child("Rooms").child(roomId).child("cards").child(card.id).removeValue()
+    }
 
 
 
