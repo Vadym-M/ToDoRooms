@@ -9,4 +9,5 @@
     <color name="background">#CCDAD1</color>
     <color name="header">#E6E6E6</color>
     <color name="blue">#2196F3</color>
+    <color name="transparent">#0000</color>
 </resources>

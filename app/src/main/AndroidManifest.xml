@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoRooms">
         <activity
+            android:name=".CreateCardActivity"
+            android:exported="false" />
+        <activity
             android:name=".TaskActivity"
             android:exported="false" />
         <activity

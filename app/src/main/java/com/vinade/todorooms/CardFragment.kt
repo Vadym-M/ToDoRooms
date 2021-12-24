@@ -1,12 +1,19 @@
 package com.vinade.todorooms
 
+import android.app.ActivityOptions
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +33,7 @@ class CardFragment : Fragment() {
     val arrayData = arrayListOf<Card>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -37,11 +45,29 @@ class CardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view = inflater.inflate(R.layout.fragment_card, container, false)
         val recycler = view.findViewById<RecyclerView>(R.id.recyclerOfCard)
+        val fab = view.findViewById<FloatingActionButton>(R.id.card_fab)
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = CardAdapter(arrayData)
+        fab.setOnClickListener {
+
+
+            intentToCreateActivity(fab)
+        }
         return view
+    }
+
+    fun intentToCreateActivity(fab: FloatingActionButton){
+        val activity = activity as RoomActivity
+        val intent = Intent(context, CreateCardActivity::class.java)
+
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            activity, fab, fab.transitionName
+        )
+        startActivity(intent, options.toBundle())
+
     }
 
     companion object {

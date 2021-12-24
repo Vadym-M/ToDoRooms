@@ -144,14 +144,6 @@ class TaskFragment : Fragment() {
 
                          db.updateItems(getRoomId(), item.task.id, item.task.items)
 
-                         val timer = object: CountDownTimer(3000, 1000) {
-                             override fun onTick(millisUntilFinished: Long) {}
-
-                             override fun onFinish() {
-
-                             }
-                         }
-                         timer.start()
                          break
                      }
                  }
