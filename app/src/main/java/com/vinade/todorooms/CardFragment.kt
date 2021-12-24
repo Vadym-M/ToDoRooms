@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,7 +33,8 @@ class CardFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var recycler: RecyclerView
+    private var db: DataBase = DataBase()
     val arrayData = arrayListOf<Card>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,16 +52,34 @@ class CardFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_card, container, false)
-        val recycler = view.findViewById<RecyclerView>(R.id.recyclerOfCard)
+        recycler = view.findViewById<RecyclerView>(R.id.recyclerOfCard)
         val fab = view.findViewById<FloatingActionButton>(R.id.card_fab)
-        recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = CardAdapter(arrayData)
+        db.initDatabase()
+
+        getCards() // show all cards
+
         fab.setOnClickListener {
-
-
             intentToCreateActivity(fab)
         }
         return view
+    }
+    fun getCards(){
+        db.getReference().child("Rooms").child(getRoomId()).child("cards").addValueEventListener(object :
+            ValueEventListener {
+            override fun onCancelled(snapshotError: DatabaseError) {
+                TODO("not implemented")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                arrayData.clear()
+                for (objSnapshot in snapshot.getChildren()) {
+                    val card = objSnapshot.getValue<Card>(Card::class.java)
+                    arrayData.add(card!!)
+                }
+                recycler.layoutManager = LinearLayoutManager(context)
+                recycler.adapter = CardAdapter(arrayData)
+            }
+        })
     }
 
     fun intentToCreateActivity(fab: FloatingActionButton){

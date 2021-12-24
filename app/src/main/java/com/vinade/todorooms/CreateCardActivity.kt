@@ -2,6 +2,7 @@ package com.vinade.todorooms
 
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.transition.Fade
 import android.transition.TransitionManager
@@ -10,17 +11,23 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 
 class CreateCardActivity : AppCompatActivity() {
     private lateinit var db :DataBase
     private lateinit var roomID: String
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         supportActionBar?.hide()
@@ -37,8 +44,11 @@ class CreateCardActivity : AppCompatActivity() {
             onBackPressed()
         }
         val btnDone = findViewById<Button>(R.id.card_create_done).setOnClickListener {
-            val card = Card(UUID.randomUUID().toString(), title.text.toString(), text_card.text.toString())
+
+            val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("H:m dd-MM-yyyy", Locale.ENGLISH))
+            val card = Card(UUID.randomUUID().toString(), title.text.toString(), text_card.text.toString(), currentDateTime)
             db.writeNewCard(roomID, card)
+            onBackPressed()
         }
 
 

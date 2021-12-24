@@ -11,10 +11,12 @@ class CardAdapter(private val data: ArrayList<Card>): RecyclerView.Adapter<CardA
     class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         val date: TextView
         val text: TextView
+        val title: TextView
         val optionBtn: TextView
     init {
         date = view.findViewById(R.id.card_date)
         text = view.findViewById(R.id.card_text)
+        title = view.findViewById(R.id.card_title)
         optionBtn = view.findViewById(R.id.card_textViewOptions)
     }
     }
@@ -25,7 +27,10 @@ class CardAdapter(private val data: ArrayList<Card>): RecyclerView.Adapter<CardA
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        val data = data[position]
+        holder.date.setText(data.dateTime)
+        holder.text.setText(data.text)
+        holder.title.setText(data.title)
     }
 
     override fun getItemCount() = data.size

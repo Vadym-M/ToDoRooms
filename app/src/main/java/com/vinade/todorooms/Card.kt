@@ -1,4 +1,5 @@
 package com.vinade.todorooms
 
-data class Card(val id:String, val title:String, val text:String) {
+data class Card(val id:String, val title:String, val text:String, val dateTime:String) {
+    constructor():this("","","","")
 }
