@@ -67,6 +67,9 @@ class DataBase {
     fun removeAllItems(roomId: String, task: Task){
         database.child("Rooms").child(roomId).child("tasks").child(task.id).child("items").removeValue()
     }
+    fun writeNewCard(roomId: String, card:Card){
+        database.child("Rooms").child(roomId).child("cards").setValue(card)
+    }
 
 
 

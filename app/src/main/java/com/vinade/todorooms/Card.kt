@@ -1,4 +1,4 @@
 package com.vinade.todorooms
 
-class Card {
+data class Card(val id:String, val title:String, val text:String) {
 }

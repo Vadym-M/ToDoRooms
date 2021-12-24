@@ -62,7 +62,7 @@ class CardFragment : Fragment() {
     fun intentToCreateActivity(fab: FloatingActionButton){
         val activity = activity as RoomActivity
         val intent = Intent(context, CreateCardActivity::class.java)
-
+        intent.putExtra("roomID", getRoomId())
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
             activity, fab, fab.transitionName
         )
@@ -88,5 +88,10 @@ class CardFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    fun getRoomId():String{
+        val roomActivity = activity as RoomActivity
+        val roomID = roomActivity.getRoomId()
+        return  roomID
     }
 }

@@ -27,12 +27,13 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/card_create_done"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            app:rippleColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="0dp"
             android:text="done"
-            app:icon="@drawable/check" />
+            app:icon="@drawable/check"
+            app:rippleColor="@color/white" />
 
     </RelativeLayout>
 </LinearLayout>
