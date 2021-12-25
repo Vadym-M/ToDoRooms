@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/light_gray"
     tools:context=".MainActivity">
 
 
@@ -37,7 +37,8 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottomAppBar"
         app:tint="@color/white"
-        app:srcCompat="@drawable/plus2"
+        app:srcCompat="@drawable/plus"
+
         app:fabCustomSize="60dp"
         />
 

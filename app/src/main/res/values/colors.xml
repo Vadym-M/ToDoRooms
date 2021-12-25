@@ -6,8 +6,14 @@
     <color name="teal_700">#DBEBC0</color>
     <color name="dim_gray">#6F6866</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="orange">#F95738</color>
+    <color name="ghost_white">#F7F7FF</color>
     <color name="background">#CCDAD1</color>
     <color name="header">#E6E6E6</color>
     <color name="blue">#2196F3</color>
     <color name="transparent">#0000</color>
+    <color name="indigo_dye">#1B4965</color>
+    <color name="cerulean">#00A7E1</color>
+    <color name="viridian">#119DA4</color>
+    <color name="light_gray">#EBEBEB</color>
 </resources>

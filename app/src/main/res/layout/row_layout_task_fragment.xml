@@ -7,13 +7,11 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="2dp"
-    android:background="@color/dim_gray">
+    android:layout_marginTop="5dp">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_50">
+    android:background="@color/white">
     <TextView
         android:id="@+id/title_task"
         android:layout_width="wrap_content"
@@ -33,6 +31,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="&#8942;"
+        android:textColor="@color/black"
         android:textAppearance="?android:textAppearanceLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +47,7 @@
         android:layout_marginEnd="32dp"
         app:icon="@drawable/plus"
         app:iconSize="35dp"
+        app:iconTint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:paddingLeft="30dp"
+    android:layout_marginRight="5dp"
     android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
+    android:background="@color/light_gray">
 
     <CheckBox
         android:id="@+id/item_of_task"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black" />
 
 
 </RelativeLayout>
