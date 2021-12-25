@@ -70,6 +70,15 @@ class DataBase {
     fun writeNewCard(roomId: String, card:Card){
         database.child("Rooms").child(roomId).child("cards").child(card.id).setValue(card)
     }
+    fun updateCard(text:String, title:String, roomId: String, cardId:String){
+        if(text != null){
+            database.child("Rooms").child(roomId).child("cards").child(cardId).child("text").setValue(text)
+        }
+        if(title != null){
+            database.child("Rooms").child(roomId).child("cards").child(cardId).child("title").setValue(title)
+        }
+
+    }
     fun removeCard(roomId: String, card:Card){
         database.child("Rooms").child(roomId).child("cards").child(card.id).removeValue()
     }

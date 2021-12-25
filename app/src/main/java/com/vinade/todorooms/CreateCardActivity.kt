@@ -41,10 +41,18 @@ class CreateCardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initDatabase()
         roomID = intent.getStringExtra("roomID").toString()
+        val titleExtra = intent.getStringExtra("title")
+        val textExtra = intent.getStringExtra("text")
+        val cardID = intent.getStringExtra("cardID")
+        val isRecycler = intent.getBooleanExtra("recycler", false)
+
         val title = findViewById<EditText>(R.id.card_create_title)
         val text_card = findViewById<EditText>(R.id.card_create_text)
         val btnBack = findViewById<Button>(R.id.card_create_back)
-
+        if (titleExtra != null || textExtra != null){
+            title.setText(titleExtra)
+            text_card.setText(textExtra)
+        }
         text_card.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 hideKeyboard(text_card)
@@ -73,7 +81,13 @@ class CreateCardActivity : AppCompatActivity() {
                 text_card.text.toString(),
                 currentDateTime
             )
-            db.writeNewCard(roomID, card)
+            if(isRecycler){
+                if (cardID != null) {
+                    db.updateCard(text_card.text.toString(),title.text.toString(),roomID, cardID)
+                }
+            }else{
+                db.writeNewCard(roomID, card)
+            }
             applicationContext.hideKeyboard(it.rootView)
             onBackPressed()
         }

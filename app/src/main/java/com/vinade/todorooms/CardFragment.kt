@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -78,7 +79,7 @@ class CardFragment : Fragment() {
                 }
                 arrayData.sortBy { it.dateTime }
                 recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = context?.let { CardAdapter(arrayData, it, getRoomId()) }
+                recycler.adapter = context?.let { CardAdapter(arrayData, it, getRoomId(), this@CardFragment) }
             }
         })
     }
@@ -92,6 +93,20 @@ class CardFragment : Fragment() {
         )
         startActivity(intent, options.toBundle())
 
+    }
+    fun intentToCreateActivityFromRecycler(container: CardView, title:String, text:String, cardID:String){
+        val activity = activity as RoomActivity
+        container.transitionName = "transition_floating_btn"
+        val intent = Intent(context, CreateCardActivity::class.java)
+        intent.putExtra("roomID", getRoomId())
+        intent.putExtra("title", title)
+        intent.putExtra("text", text)
+        intent.putExtra("cardID", cardID)
+        intent.putExtra("recycler", true)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            activity, container, container.transitionName
+        )
+        startActivity(intent, options.toBundle())
     }
 
     companion object {

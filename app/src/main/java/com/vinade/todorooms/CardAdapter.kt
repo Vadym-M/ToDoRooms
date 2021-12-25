@@ -3,31 +3,36 @@ package com.vinade.todorooms
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.vinade.todorooms.CardAdapter.*
 
-class CardAdapter(private val data: ArrayList<Card>, private val context: Context, private val roomID: String): RecyclerView.Adapter<CardAdapter.ViewHolder>() {
+class CardAdapter(private val data: ArrayList<Card>, private val context: Context, private val roomID: String, private val fragment: CardFragment): RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         val date: TextView
         val text: TextView
         val title: TextView
         val btnRemove: Button
+        val container : LinearLayout
         val db: DataBase
+        val cardItem: CardView
 
     init {
         date = view.findViewById(R.id.card_date)
         text = view.findViewById(R.id.card_text)
         title = view.findViewById(R.id.card_title)
         btnRemove = view.findViewById(R.id.card_remove_item)
+        container = view.findViewById(R.id.card_container)
+        cardItem = view.findViewById(R.id.card_item)
         db = DataBase()
         db.initDatabase()
     }
@@ -58,6 +63,9 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
             }
             alertDialogBuilder.show()
 
+        }
+        holder.container.setOnClickListener {
+            fragment.intentToCreateActivityFromRecycler(holder.cardItem, data.title, data.text, data.id)
         }
 
     }
