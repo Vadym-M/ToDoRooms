@@ -67,6 +67,8 @@ class RoomAdapter (var context: Context) : RecyclerView.Adapter<RoomAdapter.View
         btnJoin.setOnClickListener {
             val intent = Intent(context, RoomActivity::class.java)
             intent.putExtra("roomID", room.id)
+            intent.putExtra("roomTitle", room.name)
+
             context.startActivity(intent)
         }
 

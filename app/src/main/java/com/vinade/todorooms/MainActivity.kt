@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             db.writeNewRoom(room)
             val intent = Intent(this, RoomActivity::class.java)
             intent.putExtra("roomID",roomID)
+            intent.putExtra("roomTitle",room.name)
             startActivity(intent)
 
         }
@@ -95,7 +96,6 @@ class MainActivity : AppCompatActivity() {
         val search = menu?.findItem(R.id.appSearchBar)
         val searchView = search?.actionView as SearchView
         searchView.queryHint = "Search"
-        Log.d("tag", "HERE ")
 
         searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -103,11 +103,9 @@ class MainActivity : AppCompatActivity() {
                 searchView.clearFocus()
                 searchView.setQuery("",false)
                 searchView.onActionViewCollapsed()
-                Log.d("tag", "TEXT: " + query)
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.d("tag", "false ")
                 //adapter.filter.filter(newText)
                 return false
             }
