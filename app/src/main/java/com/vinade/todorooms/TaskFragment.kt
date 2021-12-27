@@ -315,7 +315,8 @@ class TaskFragment : Fragment() {
         container.transitionName = "first_transition"
         val intent = Intent(context, ItemActivity::class.java).apply {
             putExtra("idTask", taskId)
-            putExtra("idRoom", roomId)}
+            putExtra("idRoom", roomId)
+            putExtra("isFromFragment", true)}
         val options = ActivityOptions.makeSceneTransitionAnimation(
             activity, container, "first_transition"
         )

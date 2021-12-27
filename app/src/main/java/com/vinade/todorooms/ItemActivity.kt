@@ -32,6 +32,7 @@ class ItemActivity : AppCompatActivity() {
     lateinit var taskId: String
     lateinit var input:EditText
     lateinit var task: Task
+    var isFromFragment: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item)
@@ -47,6 +48,7 @@ class ItemActivity : AppCompatActivity() {
         recycler.layoutManager = lManager
         roomId = intent.getStringExtra("idRoom").toString()
         taskId = intent.getStringExtra("idTask").toString()
+        isFromFragment = intent.getBooleanExtra("isFromFragment", false)
         Handler(Looper.getMainLooper()).postDelayed({
             keyboardManager(true)
         }, 500)
@@ -54,6 +56,7 @@ class ItemActivity : AppCompatActivity() {
 
         db.initDatabase()
         val ref = db.getReference()
+
         ref.child("Rooms").child(roomId!!).child("tasks").child(taskId!!).addValueEventListener(
             object : ValueEventListener {
                 override fun onCancelled(snapshotError: DatabaseError) {
@@ -61,26 +64,28 @@ class ItemActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    task = snapshot.getValue(Task::class.java)!!
-
-                    val adapter = ItemAdapter(task.items, this@ItemActivity)
-
-                    recycler.adapter = adapter
-                    title.text = task.title
+                    if(isFromFragment){
+                    val task = snapshot.getValue(Task::class.java)!!
 
 
+                        val adapter = ItemAdapter(task.items, this@ItemActivity)
 
-                    btnAdd.setOnClickListener {
-                        val data = input.text.toString()
-                        val item = ItemTask(data)
-                        task.addItem(item)
-                        db.writeNewTask(task,roomId)
-                        input.text.clear()
+                        recycler.adapter = adapter
+                        title.text = task.title
 
-                    }
 
+
+                        btnAdd.setOnClickListener {
+                            val data = input.text.toString()
+                            val item = ItemTask(data)
+                            task.addItem(item)
+                            db.writeNewTask(task,roomId)
+                            input.text.clear()
+
+                        }
                 }
-            }
+                    isFromFragment = false
+            }}
         )
         btnDone.setOnClickListener {
             keyboardManager(false)
