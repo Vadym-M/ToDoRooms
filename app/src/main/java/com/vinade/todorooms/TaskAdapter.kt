@@ -38,6 +38,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             private val btnAddItem = itemView.findViewById<Button>(R.id.add_item)
             private val btnOptoinItem = itemView.findViewById<TextView>(R.id.textViewOptions)
             private val rootLayoutOfTitle = itemView.findViewById<ConstraintLayout>(R.id.layout_of_title_task)
+            private val itemsSize = itemView.findViewById<TextView>(R.id.items_size)
             lateinit var context:Context
             lateinit var roomID:String
             val db = initDatabase()
@@ -50,6 +51,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
             fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: RelativeLayout, adapter: TaskAdapter, rootFragment: TaskFragment){
                 headerTextView.text = task.title
+                itemsSize.text = task.items.size.toString()
                 itemView.setOnClickListener {
                    onClickListener.onClick(it)
                 }
