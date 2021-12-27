@@ -43,7 +43,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 roomID = id
             }
 
-            fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: FrameLayout){
+            fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: RelativeLayout){
                 headerTextView.text = task.title
                 itemView.setOnClickListener {
                    onClickListener.onClick(it)
@@ -76,11 +76,11 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 }
 
             }
-            fun removeTask(task: Task, layout: FrameLayout){
+            fun removeTask(task: Task, layout: RelativeLayout){
                 db.removeTask(roomID, task)
                 Snackbar.make(layout, "${task.title} removed!", Snackbar.LENGTH_SHORT).show()
             }
-            fun removeAllItems(task: Task, layout: FrameLayout){
+            fun removeAllItems(task: Task, layout: RelativeLayout){
                 db.removeAllItems(roomID, task)
                 Snackbar.make(layout, "All done!", Snackbar.LENGTH_SHORT).show()
             }
@@ -116,7 +116,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 dialog.show()
 
             }
-            fun showBottomSheetEditTitle(task: Task, layout: FrameLayout){
+            fun showBottomSheetEditTitle(task: Task, layout: RelativeLayout){
                 val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
                 val dialog = BottomSheetDialog(context)

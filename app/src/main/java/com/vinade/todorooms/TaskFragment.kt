@@ -1,19 +1,18 @@
 package com.vinade.todorooms
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
+import android.transition.TransitionManager
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.FrameLayout
+import android.widget.*
+import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.platform.MaterialArcMotion
+import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -44,9 +45,14 @@ class TaskFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var roomActivity: RoomActivity
-    private lateinit var layout: FrameLayout
+    private lateinit var layout: RelativeLayout
     private lateinit var thisView: View
     private lateinit var floatingBtn: FloatingActionButton
+    private lateinit var  createTaskTitle: EditText
+    private lateinit var  nestedScroll: NestedScrollView
+    private lateinit var  inputLayout: LinearLayout
+    private lateinit var  transition_container: FrameLayout
+    var isKeyboard : Boolean = false
 
 
     val expanded = arrayListOf<String>()
@@ -64,22 +70,25 @@ class TaskFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         initActivity()
         val view = inflater.inflate(R.layout.fragment_task, container, false)
-        //my code
+
         thisView = view
         layout = view.findViewById(R.id.layout_fragment_task)
-        //
         floatingBtn = view.findViewById<FloatingActionButton>(R.id.btnCreateTask)
         showTasks(view)
+        inputLayout = view.findViewById<LinearLayout>(R.id.input_layout)
+        transition_container = view.findViewById<FrameLayout>(R.id.transition_container)
+        nestedScroll = view.findViewById<NestedScrollView>(R.id.nestedScroll_container)
+        val createTaskBtn = view.findViewById<Button>(R.id.new_task_btn)
+        createTaskTitle = view.findViewById<EditText>(R.id.new_task_title)
         floatingBtn.setOnClickListener {
-        //showdialog()
-            showDialog()
+
+
+            showFields(createTaskBtn, view)
         }
-
-
-        //my code
+        
         return view
     }
 
@@ -111,11 +120,9 @@ class TaskFragment : Fragment() {
     }
 
     fun removeItem(id:String, task:Task){
-        Log.d("tag", "removeItem: count "+ arrayList.size)
         val array = arrayList
         for (item in array) {
              if(item.task.id == task.id){
-                 Log.d("tag", "Jest taki id")
                  for(itm in item.task.items){
                      if(itm.id.equals(id)){
                          val db = DataBase()
@@ -140,7 +147,7 @@ class TaskFragment : Fragment() {
                          }.show()
 
                          item.task.items.remove(itm)
-                         Log.d("tag", "item was romoved")
+
 
                          db.updateItems(getRoomId(), item.task.id, item.task.items)
 
@@ -153,37 +160,93 @@ class TaskFragment : Fragment() {
     }
 
 
-    private fun showDialog() {
-        val dialog = activity?.let { Dialog(it) }
-        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog?.setCancelable(false)
-        dialog?.setContentView(R.layout.custom_dialog)
+    private fun showFields(createBtn: Button, view:View) {
 
-        val yesBtn = dialog?.findViewById(R.id.dialog_ok_btn) as Button
-        val noBtn = dialog.findViewById(R.id.dialog_cancel_btn) as Button
-        val input = dialog.findViewById<EditText>(R.id.input_title_task)
-        yesBtn.setOnClickListener {
-            val task = Task(input.text.toString())
+        Handler(Looper.getMainLooper()).postDelayed({
+            keyboardManager(createTaskTitle, true)
+        }, 800)
+
+        val firstTransform = transform(floatingBtn, inputLayout)
+
+        val params = nestedScroll.layoutParams as RelativeLayout.LayoutParams
+        params.addRule(RelativeLayout.ABOVE, R.id.transition_container)
+        nestedScroll.layoutParams = params
+        TransitionManager.beginDelayedTransition(transition_container,firstTransform)
+        floatingBtn.visibility = View.GONE
+        inputLayout.visibility = View.VISIBLE
+
+
+        createBtn.setOnClickListener {
+            keyboardManager(createTaskTitle, false)
+
+            val task = Task(createTaskTitle.text.toString())
             task.initId()
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val currentDate = sdf.format(Date())
             task.timestamp = currentDate
             createTask(task)
-            dialog.dismiss()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                createTaskTitle.text.clear()
+
+                params.addRule(RelativeLayout.ABOVE, R.id.layout_fragment_task)
+                nestedScroll.layoutParams = params
+
+                val secondTranform = transform(inputLayout, floatingBtn)
+                TransitionManager.beginDelayedTransition(transition_container,secondTranform)
+                floatingBtn.visibility = View.VISIBLE
+                inputLayout.visibility = View.GONE
+            }, 100)
+
         }
-        noBtn.setOnClickListener { dialog.dismiss() }
-        dialog.show()
+
 
     }
-    fun getRootLayout(): FrameLayout{
+    fun hideFields(){
+        createTaskTitle.text.clear()
+        val params = nestedScroll.layoutParams as RelativeLayout.LayoutParams
+        params.addRule(RelativeLayout.ABOVE, R.id.layout_fragment_task)
+        nestedScroll.layoutParams = params
+
+        val secondTranform = transform(inputLayout, floatingBtn)
+        TransitionManager.beginDelayedTransition(transition_container,secondTranform)
+        floatingBtn.visibility = View.VISIBLE
+        inputLayout.visibility = View.GONE
+    }
+    fun transform(start: View, end:View) : MaterialContainerTransform{
+        return MaterialContainerTransform().apply {
+            startView = start
+            endView = end
+            addTarget(endView)
+            pathMotion = MaterialArcMotion()
+            duration = 800
+            setAllContainerColors(resources.getColor(R.color.light_gray))
+            scrimColor = Color.TRANSPARENT
+        }
+    }
+    fun keyboardManager(edit_text: EditText, show:Boolean) {
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        val manager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        if(show){
+            edit_text.requestFocus()
+            manager.showSoftInput(edit_text, InputMethodManager.SHOW_FORCED)
+            isKeyboard = true
+
+        }else{
+           manager.hideSoftInputFromWindow(edit_text.applicationWindowToken, 0)
+            isKeyboard = false
+        }
+
+    }
+
+    fun getRootLayout(): RelativeLayout{
         return layout
     }
     fun addExpand(itm:String){
-        Log.d("tag", "addExpand")
         expanded.add(itm)
     }
     fun removeExpand(itm:String){
-        Log.d("tag", "removeExpand")
         expanded.remove(itm)
     }
     fun showTasks(view: View){
@@ -258,6 +321,23 @@ class TaskFragment : Fragment() {
     fun Context.hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true)
+            {
+                override fun handleOnBackPressed() {
+                    if(isKeyboard && inputLayout.visibility == View.VISIBLE){
+                        hideFields()
+                        keyboardManager(createTaskTitle, false)
+                    }
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            callback
+        )
     }
 
 }
