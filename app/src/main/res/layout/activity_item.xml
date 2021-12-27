@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<LinearLayout
+    android:id="@+id/top_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/title_of_task"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        android:layout_gravity="center"
+        android:gravity="center|start"
+        android:text="TextView"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:transitionName="first_transition" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/items_done"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="done"
+        app:icon="@drawable/check"
+        app:rippleColor="@color/white" />
+</LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/input_field"
+        android:layout_below="@+id/top_layout"
+        android:layout_marginBottom="-7dp"
+        android:fillViewport="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerOfItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray" />
+        <!-- Scrollable content -->
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/input_field"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/input_item"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:background="@color/transparent"
+            android:layout_gravity="bottom"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Add a new subtask" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_add_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="ok" />
+    </LinearLayout>
+
+</RelativeLayout>

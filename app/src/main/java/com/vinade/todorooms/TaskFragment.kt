@@ -1,17 +1,22 @@
 package com.vinade.todorooms
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.transition.TransitionManager
 import android.util.Log
+import android.util.Pair as UtilPair
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
@@ -86,9 +91,9 @@ class TaskFragment : Fragment() {
         floatingBtn.setOnClickListener {
 
 
-            showFields(createTaskBtn, view)
+            showFields(createTaskBtn)
         }
-        
+
         return view
     }
 
@@ -160,7 +165,7 @@ class TaskFragment : Fragment() {
     }
 
 
-    private fun showFields(createBtn: Button, view:View) {
+    private fun showFields(createBtn: Button) {
 
         Handler(Looper.getMainLooper()).postDelayed({
             keyboardManager(createTaskTitle, true)
@@ -303,8 +308,18 @@ class TaskFragment : Fragment() {
         })
     }
 
-    fun listenerDatabase(){
-
+    fun intentToItemActivity(container: TextView, container2: ConstraintLayout, taskId:String, roomId:String){
+        val activity = activity as RoomActivity
+        val pair = UtilPair.create<View, String>(container, container.transitionName)
+        //val pair2 = UtilPair.create<View, String>(container2, container2.transitionName)
+        container.transitionName = "first_transition"
+        val intent = Intent(context, ItemActivity::class.java).apply {
+            putExtra("idTask", taskId)
+            putExtra("idRoom", roomId)}
+        val options = ActivityOptions.makeSceneTransitionAnimation(
+            activity, container, "first_transition"
+        )
+        startActivity(intent, options.toBundle())
     }
     fun getRoomId():String{
         val roomID = roomActivity.getRoomId()

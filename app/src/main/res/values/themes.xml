@@ -12,7 +12,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
         <item name="android:windowActivityTransitions">true</item>
+
+    </style>
+    <style name="Theme.ToDoRooms.NoActiomBar" parent="Theme.ToDoRooms">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

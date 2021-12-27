@@ -1,10 +1,15 @@
 package com.vinade.todorooms
 
 import android.content.Context
+import android.content.Intent
 import android.os.CountDownTimer
 import android.os.Handler
+import android.transition.Transition
+import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
@@ -12,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar
 class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragment): RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     var roomID = ""
     var dataList = ArrayList<Task>()
-
 
     companion object{
         const val HEADER = 0
@@ -33,6 +37,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             private val headerTextView = itemView.findViewById<TextView>(R.id.title_task)
             private val btnAddItem = itemView.findViewById<Button>(R.id.add_item)
             private val btnOptoinItem = itemView.findViewById<TextView>(R.id.textViewOptions)
+            private val rootLayoutOfTitle = itemView.findViewById<ConstraintLayout>(R.id.layout_of_title_task)
             lateinit var context:Context
             lateinit var roomID:String
             val db = initDatabase()
@@ -43,13 +48,16 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 roomID = id
             }
 
-            fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: RelativeLayout){
+            fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: RelativeLayout, adapter: TaskAdapter, rootFragment: TaskFragment){
                 headerTextView.text = task.title
                 itemView.setOnClickListener {
                    onClickListener.onClick(it)
                 }
                 btnAddItem.setOnClickListener {
-                    showBottomSheet(task)
+//                    if(adapter.isExpanded == false){
+//                        adapter.changeExpand()
+//                    }
+                    rootFragment.intentToItemActivity(headerTextView ,rootLayoutOfTitle, task.id, roomID)
                 }
                 btnOptoinItem.setOnClickListener {
                     val popup = PopupMenu(context, btnOptoinItem)
@@ -90,32 +98,6 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 return db
             }
 
-            fun showBottomSheet(task:Task){
-                val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-                val dialog = BottomSheetDialog(context)
-                val view = inflater.inflate(R.layout.bottom_sheet_create_item, null)
-
-                val title = view.findViewById<TextView>(R.id.title_of_task)
-                val input = view.findViewById<TextView>(R.id.input_item)
-                val btnAdd = view.findViewById<Button>(R.id.button_add_item)
-
-
-                title.text = task.title
-
-
-                btnAdd.setOnClickListener {
-                    val data = input.text.toString()
-                    val item = ItemTask(data)
-                    task.addItem(item)
-                    db.writeNewTask(task,roomID)
-
-                }
-
-                dialog.setContentView(view)
-                dialog.show()
-
-            }
             fun showBottomSheetEditTitle(task: Task, layout: RelativeLayout){
                 val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -178,7 +160,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
         is ViewHolder.HeaderViewHolder -> {
             context?.let { holder.initContext(it) }
             holder.initRoomID(roomID)
-            holder.onBind(task, onHeaderClicked(), fragment.getRootLayout())
+            holder.onBind(task, onHeaderClicked(), fragment.getRootLayout(), this, fragment)
 
         }
         is ViewHolder.ItemViewHolder -> {
@@ -235,5 +217,8 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
         }
 
+    }
+    fun showItems(){
+        isExpanded = true
     }
 }

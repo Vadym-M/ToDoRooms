@@ -82,6 +82,16 @@ class DataBase {
     fun removeCard(roomId: String, card:Card){
         database.child("Rooms").child(roomId).child("cards").child(card.id).removeValue()
     }
+    fun getTaskById(taskId : String, roomId: String, ): Task{
+        var task: Task = Task()
+        database.child("Rooms").child(roomId).child("tasks").child(taskId).get().addOnSuccessListener {
+            task = it.getValue(Task::class.java)!!
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+        return task
+    }
+
 
 
 
