@@ -2,6 +2,7 @@ package com.vinade.todorooms
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.os.CountDownTimer
 import android.os.Handler
 import android.transition.Transition
@@ -130,9 +131,13 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
             fun onBind(item: ItemTask, roomID: String, task:Task, fragment: TaskFragment){
                 itemCheckBoxView.text = item.text
+                if(item.isDone){
+                    itemCheckBoxView.isChecked = true
+                    itemCheckBoxView.paintFlags = itemCheckBoxView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                }
 
                 itemCheckBoxView.setOnCheckedChangeListener { buttonView, isChecked ->
-                   fragment.removeItem(item.id, task)
+                   fragment.doneItem(item.id, task)
 
                 }
             }
@@ -166,7 +171,17 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
         }
         is ViewHolder.ItemViewHolder -> {
-            holder.onBind(task.items[position-1], roomID, task, fragment)
+            val fList = mutableListOf<ItemTask>()
+            val sList = mutableListOf<ItemTask>()
+            for(item in task.items){
+                if(item.isDone){
+                    fList.add(item)
+                }else{
+                    sList.add(item)
+                }
+            }
+            val concatList = sList + fList
+            holder.onBind(concatList[position-1], roomID, task, fragment)
         }
     }
     }

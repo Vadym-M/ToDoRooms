@@ -2,6 +2,7 @@ package com.vinade.todorooms
 
 import android.app.ActionBar
 import android.graphics.Color
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +30,11 @@ class ItemAdapter(private val dataList: ArrayList<ItemTask>, private val itemAct
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = dataList[position]
-        //holder.item.rootView.setBackgroundColor(Color.WHITE)
-        val params = ActionBar.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-        //params.pad
+
+        if(data.isDone){
+            holder.item.isChecked = true
+            holder.item.paintFlags = holder.item.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        }
 
         holder.item.rootView.setPadding(0,0,0,0)
         holder.item.text = data.text

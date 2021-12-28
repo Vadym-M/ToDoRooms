@@ -11,6 +11,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/Theme.ToDoRooms">
         <activity
+            android:noHistory="true"
             android:name=".ItemActivity"
             android:exported="false" />
         <activity

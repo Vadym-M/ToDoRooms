@@ -164,6 +164,29 @@ class TaskFragment : Fragment() {
 
     }
 
+    fun doneItem(id:String, task:Task){
+        val array = arrayList
+        for (item in array) {
+            if(item.task.id == task.id){
+                for(itm in item.task.items){
+                    if(itm.id.equals(id)){
+                        val db = DataBase()
+                        db.initDatabase()
+                        val index = item.task.items.indexOf(itm)
+                        val isDone = item.task.items[index].isDone
+                        item.task.items[index].isDone = !isDone
+
+
+                        db.updateItems(getRoomId(), item.task.id, item.task.items)
+
+                        break
+                    }
+                }
+            }
+        }
+
+    }
+
 
     private fun showFields(createBtn: Button) {
 
@@ -315,8 +338,7 @@ class TaskFragment : Fragment() {
         container.transitionName = "first_transition"
         val intent = Intent(context, ItemActivity::class.java).apply {
             putExtra("idTask", taskId)
-            putExtra("idRoom", roomId)
-            putExtra("isFromFragment", true)}
+            putExtra("idRoom", roomId) }
         val options = ActivityOptions.makeSceneTransitionAnimation(
             activity, container, "first_transition"
         )

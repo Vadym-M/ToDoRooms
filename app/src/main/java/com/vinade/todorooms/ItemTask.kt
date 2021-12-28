@@ -16,7 +16,7 @@ class ItemTask : DatabaseReference.CompletionListener {
         get() {
             return field
         }
-    val isDone: Int = 0
+    var isDone: Boolean = false
         get() {
             return field
         }

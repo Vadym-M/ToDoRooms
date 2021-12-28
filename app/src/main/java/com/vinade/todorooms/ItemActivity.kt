@@ -23,7 +23,10 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class ItemActivity : AppCompatActivity() {
     var dataList = arrayListOf<ItemTask>()
@@ -32,7 +35,8 @@ class ItemActivity : AppCompatActivity() {
     lateinit var taskId: String
     lateinit var input:EditText
     lateinit var task: Task
-    var isFromFragment: Boolean = false
+    lateinit var reflatitude: DatabaseReference
+    lateinit var listener: ValueEventListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item)
@@ -48,45 +52,50 @@ class ItemActivity : AppCompatActivity() {
         recycler.layoutManager = lManager
         roomId = intent.getStringExtra("idRoom").toString()
         taskId = intent.getStringExtra("idTask").toString()
-        isFromFragment = intent.getBooleanExtra("isFromFragment", false)
         Handler(Looper.getMainLooper()).postDelayed({
             keyboardManager(true)
         }, 500)
 
-
         db.initDatabase()
-        val ref = db.getReference()
+        val database = Firebase.database
+        reflatitude = database.getReference().child("Rooms").child(roomId!!).child("tasks").child(taskId!!)
+        listener = (object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("tag", "I AM IN DATACHANGE")
+                task = snapshot.getValue(Task::class.java)!!
 
-        ref.child("Rooms").child(roomId!!).child("tasks").child(taskId!!).addValueEventListener(
-            object : ValueEventListener {
-                override fun onCancelled(snapshotError: DatabaseError) {
-                    TODO("not implemented")
+                val fList = mutableListOf<ItemTask>()
+                val sList = mutableListOf<ItemTask>()
+                for(item in task.items){
+                    if(item.isDone){
+                        fList.add(item)
+                    }else{
+                        sList.add(item)
+                    }
                 }
+                val concat = fList + sList
+                val adapter = ItemAdapter(concat as ArrayList<ItemTask>, this@ItemActivity)
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if(isFromFragment){
-                    val task = snapshot.getValue(Task::class.java)!!
-
-
-                        val adapter = ItemAdapter(task.items, this@ItemActivity)
-
-                        recycler.adapter = adapter
-                        title.text = task.title
+                recycler.adapter = adapter
+                title.text = task.title
 
 
 
-                        btnAdd.setOnClickListener {
-                            val data = input.text.toString()
-                            val item = ItemTask(data)
-                            task.addItem(item)
-                            db.writeNewTask(task,roomId)
-                            input.text.clear()
+                btnAdd.setOnClickListener {
+                    val data = input.text.toString()
+                    val item = ItemTask(data)
+                    task.addItem(item)
+                    db.writeNewTask(task,roomId)
+                    input.text.clear()
 
-                        }
                 }
-                    isFromFragment = false
-            }}
-        )
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+        reflatitude.addValueEventListener(listener)
         btnDone.setOnClickListener {
             keyboardManager(false)
             finish()
@@ -95,7 +104,12 @@ class ItemActivity : AppCompatActivity() {
     }
 
     fun removeItemTask(item:ItemTask){
-        task.items.remove(item)
+        val isDone = item.isDone
+        for(it in task.items){
+            if(it.id == item.id){
+                it.isDone = !isDone
+            }
+        }
         db.updateItems(roomId,taskId, task.items)
     }
     fun keyboardManager(show:Boolean) {
@@ -117,4 +131,8 @@ class ItemActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        reflatitude.removeEventListener(listener)
+    }
 }

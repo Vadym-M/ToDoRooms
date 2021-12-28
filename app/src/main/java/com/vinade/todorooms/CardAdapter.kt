@@ -49,7 +49,6 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
         holder.text.setText(data.text)
         holder.title.setText(data.title)
         holder.btnRemove.setOnClickListener {
-            Log.d("tag", "BUTTON WORK")
             val alertDialogBuilder = AlertDialog.Builder(context)
             alertDialogBuilder.setTitle("Remove this card?")
             //alertDialogBuilder.setPositiveButton("Remove", DialogInterface.OnClickListener(function = x))
