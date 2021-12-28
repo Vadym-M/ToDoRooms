@@ -17,6 +17,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.isEmpty
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
@@ -58,6 +59,7 @@ class TaskFragment : Fragment() {
     private lateinit var  nestedScroll: NestedScrollView
     private lateinit var  inputLayout: LinearLayout
     private lateinit var  transition_container: FrameLayout
+    private lateinit var  emptyPattern: RelativeLayout
     var isKeyboard : Boolean = false
 
 
@@ -89,6 +91,7 @@ class TaskFragment : Fragment() {
         nestedScroll = view.findViewById<NestedScrollView>(R.id.nestedScroll_container)
         val createTaskBtn = view.findViewById<Button>(R.id.new_task_btn)
         createTaskTitle = view.findViewById<EditText>(R.id.new_task_title)
+        emptyPattern = view.findViewById<RelativeLayout>(R.id.empty_tasks)
         floatingBtn.setOnClickListener {
 
 
@@ -328,6 +331,13 @@ class TaskFragment : Fragment() {
                 recyclerView.layoutManager = LinearLayoutManager(context)
                 recyclerView.adapter = concatAdapter
 
+                if (concatAdapter.itemCount == 0){
+                    Log.d("tag"," Concat size: "+ concatAdapter.itemCount)
+                    emptyPattern.visibility = View.VISIBLE
+                }else{
+                    emptyPattern.visibility = View.GONE
+                }
+
                 for (arr in arrayList){
                     for (ex in expanded){
                         if(arr.task.id == ex){
@@ -342,7 +352,7 @@ class TaskFragment : Fragment() {
         })
     }
 
-    fun intentToItemActivity(container: TextView, container2: ConstraintLayout, taskId:String, roomId:String){
+    fun intentToItemActivity(container: TextView, taskId:String, roomId:String){
         val activity = activity as RoomActivity
         val pair = UtilPair.create<View, String>(container, container.transitionName)
         //val pair2 = UtilPair.create<View, String>(container2, container2.transitionName)

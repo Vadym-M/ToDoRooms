@@ -8,6 +8,34 @@
     tools:context=".TaskFragment"
     android:background="@color/light_gray">
 
+    <RelativeLayout
+        android:id="@+id/empty_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:visibility="gone">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="324dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="300dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="You don't have tasks, click circle button to create new task." />
+    </RelativeLayout>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScroll_container"
         android:layout_width="match_parent"

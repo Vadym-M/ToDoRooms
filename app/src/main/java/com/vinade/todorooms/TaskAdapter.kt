@@ -25,12 +25,19 @@ import kotlin.concurrent.thread
 class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragment): RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     var roomID = ""
     var dataList = ArrayList<Task>()
+    init {
+        if (task.items.size == 0){
+            val item = ItemTask("You don't have subtasks, click here to create new")
+            item.id = "empty"
+            task.items.add(item)
+        }
+    }
 
     companion object{
         const val HEADER = 0
         const val ITEM = 1
     }
-
+    lateinit var headerTextView:TextView
     var isExpanded: Boolean = false
     var isSecondAnim: Boolean = false
     var isFirstClick: Boolean = false
@@ -62,9 +69,9 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             fun initRoomID(id : String){
                 roomID = id
             }
-
             @SuppressLint("SetTextI18n")
             fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: RelativeLayout, adapter: TaskAdapter, rootFragment: TaskFragment){
+                adapter.initHeaderTextView(headerTextView)
                 if(arrow.rotation == 180.0f){
                     arrow.rotation = 0.0f
                 }
@@ -93,7 +100,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                    onClickListener.onClick(it)
                 }
                 btnAddItem.setOnClickListener {
-                    rootFragment.intentToItemActivity(headerTextView ,rootLayoutOfTitle, task.id, roomID)
+                    rootFragment.intentToItemActivity(headerTextView, task.id, roomID)
                 }
                 btnOptoinItem.setOnClickListener {
                     val popup = PopupMenu(context, btnOptoinItem)
@@ -103,7 +110,6 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                         when (item!!.itemId) {
                             R.id.edit_item -> {
                                 showBottomSheetEditTitle(task, fragmentLayout)
-
                             }
                             R.id.remove_item -> {
                                 removeTask(task, fragmentLayout)
@@ -163,7 +169,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             private val itemCheckBoxView = itemView.findViewById<CheckBox>(R.id.item_of_task)
             val color = itemCheckBoxView.textColors
 
-            fun onBind(item: ItemTask, roomID: String, task:Task, fragment: TaskFragment){
+            fun onBind(item: ItemTask, roomID: String, task:Task, fragment: TaskFragment, adapter: TaskAdapter){
                 itemCheckBoxView.text = item.text
 
                 if(item.isDone){
@@ -177,7 +183,12 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 }
 
                 itemCheckBoxView.setOnClickListener {
-                   fragment.doneItem(item.id, task)
+                    if(!item.id.equals("empty")) {
+                        fragment.doneItem(item.id, task)
+                    }else{
+                        itemCheckBoxView.isChecked = false
+                        fragment.intentToItemActivity(adapter.headerTextView, task.id, roomID)
+                    }
 
                 }
             }
@@ -211,7 +222,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
         }
         is ViewHolder.ItemViewHolder -> {
-            holder.onBind(task.items[position-1], roomID, task, fragment)
+            holder.onBind(task.items[position-1], roomID, task, fragment, this)
         }
     }
     }
@@ -283,5 +294,8 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
         }
 
 
+    }
+    fun initHeaderTextView(view: View){
+        headerTextView = view as TextView
     }
 }
