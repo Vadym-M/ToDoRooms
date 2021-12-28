@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -306,7 +307,17 @@ class TaskFragment : Fragment() {
                 listTask.sortBy { it.timestamp }
                 listTask.reverse()
                 for(item in listTask){
-
+                    val fList = mutableListOf<ItemTask>()
+                    val sList = mutableListOf<ItemTask>()
+                    for(item in item.items){
+                        if(item.isDone){
+                            fList.add(item)
+                        }else{
+                            sList.add(item)
+                        }
+                    }
+                    val concatList = sList + fList
+                    item.items = concatList as ArrayList<ItemTask>
                     val adapter = TaskAdapter(item, context, this@TaskFragment)
                     adapter.initRoomID(getRoomId())
                     arrayList.add(adapter)

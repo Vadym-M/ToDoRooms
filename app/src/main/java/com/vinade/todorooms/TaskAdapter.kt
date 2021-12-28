@@ -1,19 +1,26 @@
 package com.vinade.todorooms
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.os.Handler
+import android.os.Looper
 import android.transition.Transition
 import android.util.Log
 import android.view.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
+import kotlin.concurrent.thread
 
 class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragment): RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     var roomID = ""
@@ -25,6 +32,9 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
     }
 
     var isExpanded: Boolean = false
+    var isSecondAnim: Boolean = false
+    var isFirstClick: Boolean = false
+    var isRotate: Boolean = false
 
     fun initRoomID(id:String){
         roomID = id
@@ -40,9 +50,12 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             private val btnOptoinItem = itemView.findViewById<TextView>(R.id.textViewOptions)
             private val rootLayoutOfTitle = itemView.findViewById<ConstraintLayout>(R.id.layout_of_title_task)
             private val itemsSize = itemView.findViewById<TextView>(R.id.items_size)
+            private val arrow = itemView.findViewById<ImageView>(R.id.arrow_task)
             lateinit var context:Context
             lateinit var roomID:String
             val db = initDatabase()
+            var secondAnim:Boolean = false
+
             fun initContext(context: Context){
                 this.context = context
             }
@@ -50,16 +63,36 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 roomID = id
             }
 
+            @SuppressLint("SetTextI18n")
             fun onBind(task: Task, onClickListener: View.OnClickListener, fragmentLayout: RelativeLayout, adapter: TaskAdapter, rootFragment: TaskFragment){
+                if(arrow.rotation == 180.0f){
+                    arrow.rotation = 0.0f
+                }
+                if(adapter.isFirstClick) {
+                    adapter.startAnim(arrow)
+                }
+                if(adapter.isRotate){
+                    arrow.rotation = 180f
+                    adapter.isRotate = false
+                }
+
+
                 headerTextView.text = task.title
-                itemsSize.text = task.items.size.toString()
+                val size = task.items.size.toString()
+
+                var sizeDone = 0
+                for (item in task.items){
+                    if(item.isDone){
+                        sizeDone++
+                    }
+                }
+                itemsSize.text = "$sizeDone/$size"
+
                 itemView.setOnClickListener {
+                    adapter.isFirstClick = true
                    onClickListener.onClick(it)
                 }
                 btnAddItem.setOnClickListener {
-//                    if(adapter.isExpanded == false){
-//                        adapter.changeExpand()
-//                    }
                     rootFragment.intentToItemActivity(headerTextView ,rootLayoutOfTitle, task.id, roomID)
                 }
                 btnOptoinItem.setOnClickListener {
@@ -128,15 +161,22 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
         class ItemViewHolder(itemView: View): ViewHolder(itemView){
             private val itemCheckBoxView = itemView.findViewById<CheckBox>(R.id.item_of_task)
+            val color = itemCheckBoxView.textColors
 
             fun onBind(item: ItemTask, roomID: String, task:Task, fragment: TaskFragment){
                 itemCheckBoxView.text = item.text
+
                 if(item.isDone){
                     itemCheckBoxView.isChecked = true
+                    itemCheckBoxView.setTextColor(Color.GRAY)
                     itemCheckBoxView.paintFlags = itemCheckBoxView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                }else{
+                    itemCheckBoxView.isChecked = false
+                    itemCheckBoxView.setTextColor(color)
+                    itemCheckBoxView.paintFlags = 0
                 }
 
-                itemCheckBoxView.setOnCheckedChangeListener { buttonView, isChecked ->
+                itemCheckBoxView.setOnClickListener {
                    fragment.doneItem(item.id, task)
 
                 }
@@ -171,17 +211,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
 
         }
         is ViewHolder.ItemViewHolder -> {
-            val fList = mutableListOf<ItemTask>()
-            val sList = mutableListOf<ItemTask>()
-            for(item in task.items){
-                if(item.isDone){
-                    fList.add(item)
-                }else{
-                    sList.add(item)
-                }
-            }
-            val concatList = sList + fList
-            holder.onBind(concatList[position-1], roomID, task, fragment)
+            holder.onBind(task.items[position-1], roomID, task, fragment)
         }
     }
     }
@@ -220,11 +250,14 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             notifyItemChanged(0)
             fragment.removeExpand(task.id)
         }
+
     }
     fun changeExpandFromLoop(){
         isExpanded = !isExpanded
 
         if(isExpanded){
+            isRotate = true
+            isSecondAnim = true
             notifyItemRangeInserted(1, task.items.size)
             notifyItemChanged(0)
 
@@ -235,7 +268,20 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
         }
 
     }
-    fun showItems(){
-        isExpanded = true
+
+    fun startAnim(view: View){
+        if(!isSecondAnim ){
+            val rotation = AnimationUtils.loadAnimation(context, R.anim.rotate_arrow)
+            if(isRotate){
+            }
+            view.startAnimation(rotation)
+            isSecondAnim = !isSecondAnim
+        }else{
+            val rotation = AnimationUtils.loadAnimation(context, R.anim.rotate_arrow_down)
+            view.startAnimation(rotation)
+            isSecondAnim = !isSecondAnim
+        }
+
+
     }
 }
