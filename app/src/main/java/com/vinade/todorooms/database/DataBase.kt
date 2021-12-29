@@ -18,7 +18,10 @@ import com.vinade.todorooms.model.Task
 class DataBase {
     private lateinit var database: DatabaseReference
     val list = mutableListOf<Room>()
+    val countTasks = mutableListOf<Int>()
+    val countCards = mutableListOf<Int>()
     get() = field
+
     fun initDatabase(){
         database = Firebase.database.reference
     }
@@ -29,6 +32,12 @@ class DataBase {
     fun writeNewRoom(room: Room){
         database.child("Rooms").child(room.id).setValue(room)
     }
+    fun updateRoomTitle(room: Room, title:String){
+        database.child("Rooms").child(room.id).child("name").setValue(title)
+    }
+    fun updateRoomDescription(room: Room, description: String){
+        database.child("Rooms").child(room.id).child("description").setValue(description)
+    }
 
     fun writeNewTask(task: Task, roomId : String){
         database.child("Rooms").child(roomId).child("tasks").child(task.id).setValue(task)
@@ -36,18 +45,22 @@ class DataBase {
 
     fun readAllRooms(roomAdapter: RoomAdapter, recyclerView: RecyclerView){
 
-        database.child("Rooms").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("Rooms").addValueEventListener(object : ValueEventListener {
             override fun onCancelled(snapshotError: DatabaseError) {
                 TODO("not implemented")
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                list.clear()
                 for (objSnapshot in snapshot.getChildren()) {
                     val myClass= objSnapshot.getValue<Room>(Room::class.java)
+                    countTasks.add(objSnapshot.child("tasks").childrenCount.toInt())
+                    countCards.add(objSnapshot.child("cards").childrenCount.toInt())
                     list.add(myClass!!)
                 }
                 roomAdapter.setRoomList(list)
+                roomAdapter.setCountCards(countCards)
+                roomAdapter.setCountTasks(countTasks)
                 recyclerView.adapter = roomAdapter
             }
         })

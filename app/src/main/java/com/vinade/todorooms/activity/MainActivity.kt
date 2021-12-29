@@ -14,7 +14,9 @@ import android.widget.*
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vinade.todorooms.database.DataBase
 import com.vinade.todorooms.R
 import com.vinade.todorooms.adapter.RoomAdapter
@@ -61,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(applicationContext,2)
         roomAdapter = RoomAdapter(this)
         db.readAllRooms(roomAdapter, recyclerView)
-        Log.d("tag", "HERE: " + db.list)
 
 
 
@@ -143,7 +144,12 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         dialog.setContentView(view)
+
         dialog.show()
+
+
+
+
 
 
     }

@@ -16,4 +16,5 @@
     <color name="cerulean">#00A7E1</color>
     <color name="viridian">#119DA4</color>
     <color name="light_gray">#EBEBEB</color>
+    <color name="color_text">#808080</color>
 </resources>

@@ -7,13 +7,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:screenOrientation="portrait"
+        android:supportsRtl="true"
         android:theme="@style/Theme.ToDoRooms">
         <activity
-            android:noHistory="true"
-            android:name=".activity.ItemActivity"
+            android:name=".activity.RoomEditorActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.ItemActivity"
+            android:exported="false"
+            android:noHistory="true" />
         <activity
             android:name=".activity.CreateCardActivity"
             android:exported="false" />
