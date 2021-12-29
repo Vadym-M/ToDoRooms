@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         floatingBtnAddNew.setOnClickListener {
-
+        showBottomSheet()
         }
 
     }
@@ -104,23 +104,20 @@ class MainActivity : AppCompatActivity() {
 
         val name = view.findViewById<EditText>(R.id.input_name)
         val description = view.findViewById<EditText>(R.id.input_descrip)
-        val password = view.findViewById<EditText>(R.id.input_password)
+
         val btnCreate = view.findViewById<Button>(R.id.btnCreate)
         val btnClose = view.findViewById<Button>(R.id.btnClose)
 
         btnCreate.setOnClickListener {
             val name = name.text.toString()
             val description = description.text.toString()
-            var password = password.text.toString()
-            if (password == null){
-                password = "null"
-            }
+
             val card = mutableListOf<Card>()
             val testTask = Task("TEST")
             testTask.initId()
             val task: MutableList<Task> = ArrayList()
             task.add(testTask)
-            val room = Room(name,description, password, card, task)
+            val room = Room(name,description, card, task)
             val roomID = room.initId()
             db.writeNewRoom(room)
             val intent = Intent(this, RoomActivity::class.java)

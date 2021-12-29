@@ -2,4 +2,6 @@
     <string name="app_name">ToDo Rooms</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_helper">Enter title, for example: My room</string>
+    <string name="description_helper">Enter description, for example: Room for school project</string>
 </resources>

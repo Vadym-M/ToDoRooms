@@ -36,7 +36,7 @@ class Room {
 
 
     constructor()
-    constructor(name: String, description: String, password: String, cards: MutableList<Card>, tasks: MutableList<Task>){
+    constructor(name: String, description: String, cards: MutableList<Card>, tasks: MutableList<Task>){
 
         this.name = name
         this.description = description
