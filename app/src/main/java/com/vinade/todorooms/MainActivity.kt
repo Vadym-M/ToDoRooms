@@ -7,12 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,12 +24,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var  roomAdapter: RoomAdapter
     private lateinit var db : DataBase
 
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_room_btn) }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_room_btn) }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
+
+    private var clicked = false
+
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         db = DataBase()
         db.initDatabase()
 
@@ -41,11 +54,47 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val fBtn = findViewById<FloatingActionButton>(R.id.floatingBtn)
 
-        fBtn.setOnClickListener {
-            showBottomSheet()
+
+        floatingBtn.setOnClickListener {
+            onAddButtonClicked()
         }
+        floatingBtnKey.setOnClickListener {
+
+        }
+        floatingBtnAddNew.setOnClickListener {
+
+        }
+
+    }
+
+    private fun onAddButtonClicked() {
+        setVisibility()
+        setAnimation()
+        clicked = !clicked
+
+    }
+
+    private fun setAnimation() {
+     if(!clicked){
+         floatingBtnAddNew.visibility = View.VISIBLE
+         floatingBtnKey.visibility = View.VISIBLE
+     }else{
+         floatingBtnAddNew.visibility = View.GONE
+         floatingBtnKey.visibility = View.GONE
+     }
+    }
+
+    private fun setVisibility() {
+      if(!clicked){
+          floatingBtn.startAnimation(rotateOpen)
+          floatingBtnKey.startAnimation(fromBottom)
+          floatingBtnAddNew.startAnimation(fromBottom)
+      }else{
+          floatingBtn.startAnimation(rotateClose)
+          floatingBtnKey.startAnimation(toBottom)
+          floatingBtnAddNew.startAnimation(toBottom)
+      }
     }
 
 
