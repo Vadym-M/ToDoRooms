@@ -1,32 +1,29 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.activity
 
 import android.content.Context
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.ContactsContract
 import android.util.Log
-import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.platform.MaterialArcMotion
-import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.R
+import com.vinade.todorooms.adapter.ItemAdapter
+import com.vinade.todorooms.model.ItemTask
+import com.vinade.todorooms.model.Task
 
 class ItemActivity : AppCompatActivity() {
     var dataList = arrayListOf<ItemTask>()
@@ -103,7 +100,7 @@ class ItemActivity : AppCompatActivity() {
 
     }
 
-    fun removeItemTask(item:ItemTask){
+    fun removeItemTask(item: ItemTask){
         val isDone = item.isDone
         for(it in task.items){
             if(it.id == item.id){

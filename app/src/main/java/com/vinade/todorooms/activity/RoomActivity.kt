@@ -1,16 +1,17 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.activity
 
 import android.app.SearchManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.vinade.todorooms.fragment.CardFragment
+import com.vinade.todorooms.R
+import com.vinade.todorooms.fragment.TaskFragment
+import com.vinade.todorooms.adapter.ViewPagerAdapter
 
 class RoomActivity : AppCompatActivity() {
 

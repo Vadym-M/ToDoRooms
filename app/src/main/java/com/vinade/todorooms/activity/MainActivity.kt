@@ -1,4 +1,4 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.activity
 
 import android.app.SearchManager
 import android.content.Context
@@ -15,7 +15,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.R
+import com.vinade.todorooms.adapter.RoomAdapter
+import com.vinade.todorooms.model.Card
+import com.vinade.todorooms.model.Room
+import com.vinade.todorooms.model.Task
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -24,10 +29,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var  roomAdapter: RoomAdapter
     private lateinit var db : DataBase
 
-    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_room_btn) }
-    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_room_btn) }
-    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
-    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this,
+        R.anim.rotate_open_room_btn
+    ) }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this,
+        R.anim.rotate_close_room_btn
+    ) }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this,
+        R.anim.from_bottom_anim
+    ) }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this,
+        R.anim.to_bottom_anim
+    ) }
 
     private var clicked = false
 

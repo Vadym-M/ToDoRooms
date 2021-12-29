@@ -1,4 +1,4 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.model
 
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

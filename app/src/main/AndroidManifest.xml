@@ -12,16 +12,16 @@
         android:theme="@style/Theme.ToDoRooms">
         <activity
             android:noHistory="true"
-            android:name=".ItemActivity"
+            android:name=".activity.ItemActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateCardActivity"
+            android:name=".activity.CreateCardActivity"
             android:exported="false" />
         <activity
-            android:name=".RoomActivity"
+            android:name=".activity.RoomActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

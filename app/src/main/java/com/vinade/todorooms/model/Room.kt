@@ -1,5 +1,7 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.model
 
+import com.vinade.todorooms.model.Card
+import com.vinade.todorooms.model.Task
 import java.util.*
 
 

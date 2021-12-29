@@ -1,4 +1,4 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.fragment
 
 import android.app.Activity
 import android.app.ActivityOptions
@@ -15,9 +15,6 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.isEmpty
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
@@ -31,6 +28,13 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.R
+import com.vinade.todorooms.activity.ItemActivity
+import com.vinade.todorooms.activity.RoomActivity
+import com.vinade.todorooms.adapter.TaskAdapter
+import com.vinade.todorooms.model.ItemTask
+import com.vinade.todorooms.model.Task
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -120,7 +124,7 @@ class TaskFragment : Fragment() {
                 }
             }
     }
-    fun createTask(task:Task){
+    fun createTask(task: Task){
         val roomID = getRoomId()
     val db = DataBase()
         db.initDatabase()
@@ -128,7 +132,7 @@ class TaskFragment : Fragment() {
         db.readRoomById(roomID)
     }
 
-    fun removeItem(id:String, task:Task){
+    fun removeItem(id:String, task: Task){
         val array = arrayList
         for (item in array) {
              if(item.task.id == task.id){
@@ -168,7 +172,7 @@ class TaskFragment : Fragment() {
 
     }
 
-    fun doneItem(id:String, task:Task){
+    fun doneItem(id:String, task: Task){
         val array = arrayList
         for (item in array) {
             if(item.task.id == task.id){

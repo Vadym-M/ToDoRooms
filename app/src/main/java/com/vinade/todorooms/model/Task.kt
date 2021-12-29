@@ -1,5 +1,6 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.model
 
+import com.vinade.todorooms.model.ItemTask
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,7 +45,7 @@ class Task {
     fun initId(){
         this.id = UUID.randomUUID().toString()
     }
-    fun addItem(item:ItemTask){
+    fun addItem(item: ItemTask){
         items.add(item)
     }
 }

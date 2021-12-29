@@ -1,4 +1,4 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

@@ -1,17 +1,14 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.adapter
 
-import android.app.ActionBar
-import android.graphics.Color
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.RelativeLayout
-import androidx.core.view.marginLeft
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.collection.LLRBNode
+import com.vinade.todorooms.activity.ItemActivity
+import com.vinade.todorooms.model.ItemTask
+import com.vinade.todorooms.R
 
 class ItemAdapter(private val dataList: ArrayList<ItemTask>, private val itemActivity: ItemActivity): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 

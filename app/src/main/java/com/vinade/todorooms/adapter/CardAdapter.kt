@@ -1,20 +1,17 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.adapter
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.vinade.todorooms.CardAdapter.*
+import com.vinade.todorooms.model.Card
+import com.vinade.todorooms.fragment.CardFragment
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.R
 
 class CardAdapter(private val data: ArrayList<Card>, private val context: Context, private val roomID: String, private val fragment: CardFragment): RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {

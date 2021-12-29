@@ -1,9 +1,8 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.activity
 
 
 import android.app.Activity
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +22,9 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.R
+import com.vinade.todorooms.model.Card
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*

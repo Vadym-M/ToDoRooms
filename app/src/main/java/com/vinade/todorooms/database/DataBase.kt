@@ -1,4 +1,4 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.database
 
 
 import android.util.Log
@@ -9,6 +9,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.vinade.todorooms.adapter.RoomAdapter
+import com.vinade.todorooms.model.Card
+import com.vinade.todorooms.model.ItemTask
+import com.vinade.todorooms.model.Room
+import com.vinade.todorooms.model.Task
 
 class DataBase {
     private lateinit var database: DatabaseReference
@@ -67,7 +72,7 @@ class DataBase {
     fun removeAllItems(roomId: String, task: Task){
         database.child("Rooms").child(roomId).child("tasks").child(task.id).child("items").removeValue()
     }
-    fun writeNewCard(roomId: String, card:Card){
+    fun writeNewCard(roomId: String, card: Card){
         database.child("Rooms").child(roomId).child("cards").child(card.id).setValue(card)
     }
     fun updateCard(text:String, title:String, roomId: String, cardId:String){
@@ -79,10 +84,10 @@ class DataBase {
         }
 
     }
-    fun removeCard(roomId: String, card:Card){
+    fun removeCard(roomId: String, card: Card){
         database.child("Rooms").child(roomId).child("cards").child(card.id).removeValue()
     }
-    fun getTaskById(taskId : String, roomId: String, ): Task{
+    fun getTaskById(taskId : String, roomId: String, ): Task {
         var task: Task = Task()
         database.child("Rooms").child(roomId).child("tasks").child(taskId).get().addOnSuccessListener {
             task = it.getValue(Task::class.java)!!

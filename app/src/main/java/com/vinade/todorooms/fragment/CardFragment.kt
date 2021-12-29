@@ -1,24 +1,25 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.fragment
 
-import android.app.ActivityOptions
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.R
+import com.vinade.todorooms.activity.CreateCardActivity
+import com.vinade.todorooms.activity.RoomActivity
+import com.vinade.todorooms.adapter.CardAdapter
+import com.vinade.todorooms.model.Card
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

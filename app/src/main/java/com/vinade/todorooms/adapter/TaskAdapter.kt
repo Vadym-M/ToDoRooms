@@ -1,28 +1,23 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
-import android.transition.Transition
-import android.util.Log
 import android.view.*
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import kotlin.concurrent.thread
+import com.vinade.todorooms.*
+import com.vinade.todorooms.database.DataBase
+import com.vinade.todorooms.fragment.TaskFragment
+import com.vinade.todorooms.model.ItemTask
+import com.vinade.todorooms.model.Task
 
-class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragment): RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
+class TaskAdapter(val task: Task, val context: Context?, val fragment: TaskFragment): RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     var roomID = ""
     var dataList = ArrayList<Task>()
     init {
@@ -134,7 +129,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
                 db.removeAllItems(roomID, task)
                 Snackbar.make(layout, "All done!", Snackbar.LENGTH_SHORT).show()
             }
-            fun initDatabase(): DataBase{
+            fun initDatabase(): DataBase {
                 val db = DataBase()
                 db.initDatabase()
                 return db
@@ -169,7 +164,7 @@ class TaskAdapter(val task:Task, val context: Context?, val fragment: TaskFragme
             private val itemCheckBoxView = itemView.findViewById<CheckBox>(R.id.item_of_task)
             val color = itemCheckBoxView.textColors
 
-            fun onBind(item: ItemTask, roomID: String, task:Task, fragment: TaskFragment, adapter: TaskAdapter){
+            fun onBind(item: ItemTask, roomID: String, task: Task, fragment: TaskFragment, adapter: TaskAdapter){
                 itemCheckBoxView.text = item.text
 
                 if(item.isDone){

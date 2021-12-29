@@ -1,4 +1,4 @@
-package com.vinade.todorooms
+package com.vinade.todorooms.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.vinade.todorooms.R
+import com.vinade.todorooms.model.Room
+import com.vinade.todorooms.activity.RoomActivity
 
 class RoomAdapter (var context: Context) : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
 
@@ -30,7 +33,7 @@ class RoomAdapter (var context: Context) : RecyclerView.Adapter<RoomAdapter.View
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
 
         var view = LayoutInflater.from(parent.context).inflate(R.layout.row_layout_activity_main, parent, false)
@@ -38,7 +41,7 @@ class RoomAdapter (var context: Context) : RecyclerView.Adapter<RoomAdapter.View
     }
 
 
-    override fun onBindViewHolder(holder: RoomAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
 
         var data = dataList[position]
