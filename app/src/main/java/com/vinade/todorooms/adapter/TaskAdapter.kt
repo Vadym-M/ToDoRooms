@@ -106,11 +106,17 @@ class TaskAdapter(val task: Task, val context: Context?, val fragment: TaskFragm
                             R.id.edit_item -> {
                                 showBottomSheetEditTitle(task, fragmentLayout)
                             }
-                            R.id.remove_item -> {
-                                removeTask(task, fragmentLayout)
+                            R.id.delete_all_done_item -> {
+                                deleteAllDoneItems(task)
                             }
-                            R.id.done_item -> {
+                            R.id.done_all_item -> {
+                               doneAllItems(task)
+                            }
+                            R.id.delete_all_item->{
                                 removeAllItems(task, fragmentLayout)
+                            }
+                            R.id.delete_task->{
+                                deleteTask(task)
                             }
                         }
 
@@ -121,13 +127,32 @@ class TaskAdapter(val task: Task, val context: Context?, val fragment: TaskFragm
                 }
 
             }
-            fun removeTask(task: Task, layout: RelativeLayout){
+
+            private fun deleteTask(task: Task) {
                 db.removeTask(roomID, task)
-                Snackbar.make(layout, "${task.title} removed!", Snackbar.LENGTH_SHORT).show()
+
+            }
+
+            fun deleteAllDoneItems(task: Task){
+                val tasksForRemove = mutableListOf<ItemTask>()
+                for (item in task.items){
+                      if(item.isDone){
+                         tasksForRemove.add(item)
+                      }
+                  }
+                task.items.removeAll(tasksForRemove)
+                db.updateItems(roomID, task.id, task.items)
             }
             fun removeAllItems(task: Task, layout: RelativeLayout){
                 db.removeAllItems(roomID, task)
                 Snackbar.make(layout, "All done!", Snackbar.LENGTH_SHORT).show()
+            }
+
+            fun doneAllItems(task: Task){
+                for (item in task.items){
+                    item.isDone = true
+                }
+                db.updateItems(roomID, task.id, task.items)
             }
             fun initDatabase(): DataBase {
                 val db = DataBase()

@@ -184,10 +184,7 @@ class MainActivity : AppCompatActivity() {
             db.addMyRoom(roomID)
             db.writeNewRoom(room)
             dialog.dismiss()
-//            val intent = Intent(this, RoomActivity::class.java)
-//            intent.putExtra("roomID",roomID)
-//            intent.putExtra("roomTitle",room.name)
-//            startActivity(intent)
+
 
         }
         btnClose.setOnClickListener {

@@ -48,4 +48,7 @@ class Task {
     fun addItem(item: ItemTask){
         items.add(item)
     }
+    fun deleteItem(item: ItemTask){
+        items.remove(item)
+    }
 }
