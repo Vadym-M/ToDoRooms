@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val progressBar = findViewById<ProgressBar>(R.id.progress_bar_room)
+        progressBar.visibility = View.VISIBLE
 
         db = DataBase()
         db.initDatabase()
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(applicationContext,2)
         roomAdapter = RoomAdapter(this)
-        db.readAllRooms(roomAdapter, recyclerView)
+        db.readAllRooms(roomAdapter, recyclerView, progressBar)
 
 
 
@@ -111,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         db.addMyRoom(room)
                         dbSQLite.addRoom(room)
                         roomAdapter = RoomAdapter(this)
-                        db.readAllRooms(roomAdapter, recyclerView)
+                        db.readAllRooms(roomAdapter, recyclerView, progressBar)
                         dialog.dismiss()
                         break
                     }
@@ -203,27 +204,29 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-
-        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val search = menu?.findItem(R.id.appSearchBar)
-        val searchView = search?.actionView as SearchView
-        searchView.queryHint = "Search"
-
-        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                searchView.setQuery("",false)
-                searchView.onActionViewCollapsed()
-                return true
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                //adapter.filter.filter(newText)
-                return false
-            }
-        })
-        return super.onCreateOptionsMenu(menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu, menu)
+//
+//        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val search = menu?.findItem(R.id.appSearchBar)
+//        val searchView = search?.actionView as SearchView
+//        searchView.queryHint = "Search"
+//
+//        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                searchView.clearFocus()
+//                searchView.setQuery("",false)
+//                searchView.onActionViewCollapsed()
+//
+//                return true
+//            }
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                //adapter.filter.filter(newText)
+//
+//                return false
+//            }
+//        })
+//        return super.onCreateOptionsMenu(menu)
+//    }
 }

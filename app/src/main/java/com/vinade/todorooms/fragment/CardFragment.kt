@@ -1,13 +1,16 @@
 package com.vinade.todorooms.fragment
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,6 +20,7 @@ import com.google.firebase.database.ValueEventListener
 import com.vinade.todorooms.database.DataBase
 import com.vinade.todorooms.R
 import com.vinade.todorooms.activity.CreateCardActivity
+import com.vinade.todorooms.activity.MainActivity
 import com.vinade.todorooms.activity.RoomActivity
 import com.vinade.todorooms.adapter.CardAdapter
 import com.vinade.todorooms.model.Card
@@ -38,14 +42,17 @@ class CardFragment : Fragment() {
     private lateinit var recycler: RecyclerView
     private var db: DataBase = DataBase()
     val arrayData = arrayListOf<Card>()
+    lateinit var adapter: CardAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
     override fun onCreateView(
@@ -79,8 +86,9 @@ class CardFragment : Fragment() {
                     arrayData.add(card!!)
                 }
                 arrayData.sortBy { it.dateTime }
+                adapter = CardAdapter(arrayData, context!!, getRoomId(), this@CardFragment)
                 recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = context?.let { CardAdapter(arrayData, it, getRoomId(), this@CardFragment) }
+                recycler.adapter = context?.let { adapter }
             }
         })
     }
@@ -134,4 +142,31 @@ class CardFragment : Fragment() {
         val roomID = roomActivity.getRoomId()
         return  roomID
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.menu, menu)
+//
+//        val manager = context?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val search = menu?.findItem(R.id.appSearchBar)
+//        val searchView = search?.actionView as SearchView
+//        searchView.queryHint = "Search"
+//
+//        //searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                searchView.clearFocus()
+//                searchView.setQuery("",false)
+//                searchView.onActionViewCollapsed()
+//                Log.e("tag", "ok ")
+//                return true
+//            }
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                adapter.filter.filter(newText)
+//                Log.e("tag", "ok 1")
+//                return false
+//            }
+//        })
+//
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
 }

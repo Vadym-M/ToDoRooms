@@ -12,8 +12,14 @@ import com.vinade.todorooms.model.Card
 import com.vinade.todorooms.fragment.CardFragment
 import com.vinade.todorooms.database.DataBase
 import com.vinade.todorooms.R
+import java.util.*
+import kotlin.collections.ArrayList
 
-class CardAdapter(private val data: ArrayList<Card>, private val context: Context, private val roomID: String, private val fragment: CardFragment): RecyclerView.Adapter<CardAdapter.ViewHolder>() {
+class CardAdapter(private val data: ArrayList<Card>, private val context: Context, private val roomID: String, private val fragment: CardFragment): RecyclerView.Adapter<CardAdapter.ViewHolder>(), Filterable {
+    var dataFilterList = ArrayList<Card>()
+    init {
+        dataFilterList = data
+    }
     class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         val date: TextView
         val text: TextView
@@ -24,6 +30,7 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
         val cardItem: CardView
 
     init {
+
         date = view.findViewById(R.id.card_date)
         text = view.findViewById(R.id.card_text)
         title = view.findViewById(R.id.card_title)
@@ -41,7 +48,8 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val data = data[position]
+
+        val data = dataFilterList[position]
         holder.date.setText(data.dateTime)
         holder.text.setText(data.text)
         holder.title.setText(data.title)
@@ -66,5 +74,35 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
 
     }
 
-    override fun getItemCount() = data.size
+    override fun getItemCount() = dataFilterList.size
+
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    dataFilterList = data
+                } else {
+                    val resultList = ArrayList<Card>()
+                    for (row in data) {
+                        if (row.text.lowercase(Locale.ROOT).contains(charSearch.lowercase(Locale.ROOT)) || row.title.lowercase(Locale.ROOT).contains(charSearch.lowercase(Locale.ROOT)) ) {
+                            resultList.add(row)
+                        }
+                    }
+                    dataFilterList = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = dataFilterList
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                dataFilterList = results?.values as ArrayList<Card>
+                notifyDataSetChanged()
+            }
+
+        }
+    }
 }

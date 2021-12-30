@@ -2,6 +2,8 @@ package com.vinade.todorooms.database
 
 
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -53,7 +55,7 @@ class DataBase {
         database.child("Rooms").child(roomId).child("tasks").child(task.id).setValue(task)
     }
 
-    fun readAllRooms(roomAdapter: RoomAdapter, recyclerView: RecyclerView){
+    fun readAllRooms(roomAdapter: RoomAdapter, recyclerView: RecyclerView, progressBar: ProgressBar){
 
         database.child("Rooms").addValueEventListener(object : ValueEventListener {
             override fun onCancelled(snapshotError: DatabaseError) {
@@ -78,6 +80,7 @@ class DataBase {
                 roomAdapter.setCountCards(countCards)
                 roomAdapter.setCountTasks(countTasks)
                 recyclerView.adapter = roomAdapter
+                progressBar.visibility = View.GONE
             }
         })
     }

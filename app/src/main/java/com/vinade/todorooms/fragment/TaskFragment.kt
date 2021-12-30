@@ -2,6 +2,7 @@ package com.vinade.todorooms.fragment
 
 import android.app.Activity
 import android.app.ActivityOptions
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,6 +16,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
@@ -72,6 +74,7 @@ class TaskFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -286,6 +289,8 @@ class TaskFragment : Fragment() {
         expanded.remove(itm)
     }
     fun showTasks(view: View){
+        val progress_bar = view.findViewById<ProgressBar>(R.id.progress_bar_task_fragment)
+        progress_bar.visibility = View.VISIBLE
         val database = DataBase()
         database.initDatabase()
         val ref = database.getReference()
@@ -334,6 +339,7 @@ class TaskFragment : Fragment() {
                 val concatAdapter = ConcatAdapter(concatAdapterConfig, arrayList)
                 recyclerView.layoutManager = LinearLayoutManager(context)
                 recyclerView.adapter = concatAdapter
+                progress_bar.visibility = View.GONE
 
                 if (concatAdapter.itemCount == 0){
                     Log.d("tag"," Concat size: "+ concatAdapter.itemCount)
@@ -404,5 +410,31 @@ class TaskFragment : Fragment() {
             callback
         )
     }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.menu, menu)
+//
+//        val manager = context?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val search = menu?.findItem(R.id.appSearchBar)
+//        val searchView = search?.actionView as SearchView
+//        searchView.queryHint = "Search"
+//
+//        //searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                searchView.clearFocus()
+//                searchView.setQuery("",false)
+//                searchView.onActionViewCollapsed()
+//                Log.e("tag", "ok ")
+//                return true
+//            }
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                //adapter.filter.filter(newText)
+//                Log.e("tag", "ok 1")
+//                return false
+//            }
+//        })
+//
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
 
 }

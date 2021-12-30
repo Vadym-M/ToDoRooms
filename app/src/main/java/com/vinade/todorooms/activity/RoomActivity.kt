@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.viewpager.widget.ViewPager
@@ -47,28 +48,6 @@ class RoomActivity : AppCompatActivity() {
     fun getRoomId():String{
         return roomID
     }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
 
-        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val search = menu?.findItem(R.id.appSearchBar)
-        val searchView = search?.actionView as SearchView
-        searchView.queryHint = "Search"
-
-        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                searchView.setQuery("",false)
-                searchView.onActionViewCollapsed()
-                return true
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                //adapter.filter.filter(newText)
-                return false
-            }
-        })
-        return super.onCreateOptionsMenu(menu)
-    }
 
 }
