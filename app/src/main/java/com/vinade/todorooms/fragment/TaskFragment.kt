@@ -394,6 +394,8 @@ class TaskFragment : Fragment() {
                     if(isKeyboard && inputLayout.visibility == View.VISIBLE){
                         hideFields()
                         keyboardManager(createTaskTitle, false)
+                    }else{
+                        activity?.finish()
                     }
                 }
             }

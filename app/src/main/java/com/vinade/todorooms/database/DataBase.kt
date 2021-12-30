@@ -18,12 +18,22 @@ import com.vinade.todorooms.model.Task
 class DataBase {
     private lateinit var database: DatabaseReference
     val list = mutableListOf<Room>()
+    var myRooms = mutableListOf<String>()
     val countTasks = mutableListOf<Int>()
     val countCards = mutableListOf<Int>()
+    val allId = mutableListOf<String>()
     get() = field
-
+    fun getListOfRoomsId(): MutableList<String>{
+        return allId
+    }
     fun initDatabase(){
         database = Firebase.database.reference
+    }
+    fun initMyRooms(list: MutableList<String>){
+        myRooms = list
+    }
+    fun addMyRoom(id: String){
+        myRooms.add(id)
     }
     fun getReference():DatabaseReference{
         return database
@@ -51,12 +61,18 @@ class DataBase {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
+
                 list.clear()
                 for (objSnapshot in snapshot.getChildren()) {
                     val myClass= objSnapshot.getValue<Room>(Room::class.java)
-                    countTasks.add(objSnapshot.child("tasks").childrenCount.toInt())
-                    countCards.add(objSnapshot.child("cards").childrenCount.toInt())
-                    list.add(myClass!!)
+                    allId.add(myClass!!.id)
+                    for (room in myRooms){
+                        if(room == myClass!!.id){
+                            countTasks.add(objSnapshot.child("tasks").childrenCount.toInt())
+                            countCards.add(objSnapshot.child("cards").childrenCount.toInt())
+                            list.add(myClass!!)
+                        }
+                    }
                 }
                 roomAdapter.setRoomList(list)
                 roomAdapter.setCountCards(countCards)
