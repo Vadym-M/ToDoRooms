@@ -1,7 +1,9 @@
 package com.vinade.todorooms.adapter
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +14,26 @@ import com.vinade.todorooms.model.Card
 import com.vinade.todorooms.fragment.CardFragment
 import com.vinade.todorooms.database.DataBase
 import com.vinade.todorooms.R
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CardAdapter(private val data: ArrayList<Card>, private val context: Context, private val roomID: String, private val fragment: CardFragment): RecyclerView.Adapter<CardAdapter.ViewHolder>(), Filterable {
     var dataFilterList = ArrayList<Card>()
+    val db =DataBase()
     init {
         dataFilterList = data
+        db.initDatabase()
     }
     class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         val date: TextView
         val text: TextView
         val title: TextView
-        val btnRemove: Button
         val container : LinearLayout
         val db: DataBase
         val cardItem: CardView
@@ -34,7 +43,6 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
         date = view.findViewById(R.id.card_date)
         text = view.findViewById(R.id.card_text)
         title = view.findViewById(R.id.card_title)
-        btnRemove = view.findViewById(R.id.card_remove_item)
         container = view.findViewById(R.id.card_container)
         cardItem = view.findViewById(R.id.card_item)
         db = DataBase()
@@ -47,34 +55,45 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val data = dataFilterList[position]
-        holder.date.setText(data.dateTime)
-        holder.text.setText(data.text)
-        holder.title.setText(data.title)
-        holder.btnRemove.setOnClickListener {
-            val alertDialogBuilder = AlertDialog.Builder(context)
-            alertDialogBuilder.setTitle("Remove this card?")
-            //alertDialogBuilder.setPositiveButton("Remove", DialogInterface.OnClickListener(function = x))
-            alertDialogBuilder.setPositiveButton("remove") { dialog, which ->
-                holder.db.removeCard(roomID, data)
-                Toast.makeText(context,
-                    "Card removed!", Toast.LENGTH_SHORT).show()
-            }
-            alertDialogBuilder.setNegativeButton("cancel"){ dialog, which ->
-
-            }
-            alertDialogBuilder.show()
-
+        val t = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDateTime.parse(data.dateTime, DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy", Locale.ENGLISH))
+        } else {
+            TODO("VERSION.SDK_INT < O")
         }
+
+        if(data.title.isEmpty()){
+            holder.title.visibility = View.GONE
+        }else{
+            holder.title.setText(data.title)
+        }
+        val f: NumberFormat = DecimalFormat("00")
+        holder.date.text = t.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+        //holder.date.text = "${f.format(t.hour)}:${f.format(t.minute) } ${t.dayOfWeek}"
+        holder.text.setText(data.text)
+
+
+
         holder.container.setOnClickListener {
             fragment.intentToCreateActivityFromRecycler(holder.cardItem, data.title, data.text, data.id)
         }
 
     }
+    fun deleteItem(position: Int){
+        db.removeCard(roomID, dataFilterList[position])
+        Toast.makeText(context,
+            "Card removed!", Toast.LENGTH_SHORT).show()
+    }
+
+    fun getContext(): Context{
+        return context
+    }
 
     override fun getItemCount() = dataFilterList.size
+
 
 
     override fun getFilter(): Filter {

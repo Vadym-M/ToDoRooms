@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.vinade.todorooms.database.DataBase
 import com.vinade.todorooms.R
+import com.vinade.todorooms.SwipeToDeleteCallBack
 import com.vinade.todorooms.activity.CreateCardActivity
 import com.vinade.todorooms.activity.MainActivity
 import com.vinade.todorooms.activity.RoomActivity
@@ -89,8 +91,12 @@ class CardFragment : Fragment() {
                 adapter = CardAdapter(arrayData, context!!, getRoomId(), this@CardFragment)
                 recycler.layoutManager = LinearLayoutManager(context)
                 recycler.adapter = context?.let { adapter }
+                var itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallBack(adapter))
+                itemTouchHelper.attachToRecyclerView(recycler)
             }
         })
+
+
     }
 
     fun intentToCreateActivity(fab: FloatingActionButton){

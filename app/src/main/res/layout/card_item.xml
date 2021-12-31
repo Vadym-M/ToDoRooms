@@ -18,6 +18,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/container_title_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -27,23 +28,12 @@
                 android:id="@+id/card_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:layout_marginTop="10dp"
-                android:text="title"
                 android:layout_weight="1"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="title"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/card_remove_item"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginTop="0dp"
-                app:icon="@drawable/close"
-                app:iconTint="@color/black"
-                app:iconGravity="top" />
+                android:textSize="16sp" />
 
 
 
@@ -58,21 +48,25 @@
                 android:id="@+id/card_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
+                android:fontFamily="@font/montserrat"
+                android:text="TextView"
                 android:textColor="@color/black"
-                android:text="TextView" />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/card_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="end|bottom"
-            android:textColor="@color/black"
-            android:text="21.12.21" />
+            android:fontFamily="@font/montserrat"
+            android:textSize="10dp"
+            android:text="21.12.21"
+            />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

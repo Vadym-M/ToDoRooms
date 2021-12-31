@@ -76,7 +76,7 @@ class CreateCardActivity : AppCompatActivity() {
         val btnDone = findViewById<Button>(R.id.card_create_done).setOnClickListener {
 
             val currentDateTime = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("H:m dd-MM-yyyy", Locale.ENGLISH))
+                .format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy", Locale.ENGLISH))
             val card = Card(
                 UUID.randomUUID().toString(),
                 title.text.toString(),

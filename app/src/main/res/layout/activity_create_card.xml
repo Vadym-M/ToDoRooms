@@ -42,6 +42,8 @@
         android:id="@+id/card_create_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:inputType="textCapSentences"
         android:hint="Title"/>
 
     <EditText
@@ -50,7 +52,7 @@
         android:layout_height="match_parent"
         android:ems="10"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapSentences"
         android:hint="Text"/>
 
 
