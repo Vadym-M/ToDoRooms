@@ -11,14 +11,15 @@
     android:layout_height="200dp"
     android:background="@color/white"
     android:orientation="vertical">
+
     <TextView
         android:id="@+id/element_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="TEST"
+        android:fontFamily="@font/montserrat"
         android:gravity="center"
-        android:textColor="@color/black"
-        />
+        android:text="TEST"
+        android:textColor="@color/black" />
 
 </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

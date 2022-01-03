@@ -102,7 +102,7 @@ class CreateCardActivity : AppCompatActivity() {
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         val transform = MaterialContainerTransform()
         transform.addTarget(android.R.id.content)
-        transform.setAllContainerColors(Color.WHITE)
+        transform.setAllContainerColors(resources.getColor(R.color.light_gray))
         transform.duration = 500
         transform.fadeMode = MaterialContainerTransform.FADE_MODE_IN
         transform.interpolator = FastOutSlowInInterpolator()
