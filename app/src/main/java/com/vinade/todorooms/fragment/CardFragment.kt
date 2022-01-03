@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
@@ -47,6 +48,7 @@ class CardFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recycler: RecyclerView
+    private lateinit var emptyPattern: TextView
     private var db: DataBase = DataBase()
     val arrayData = arrayListOf<Card>()
     lateinit var adapter: CardAdapter
@@ -69,6 +71,7 @@ class CardFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_card, container, false)
         recycler = view.findViewById<RecyclerView>(R.id.recyclerOfCard)
+        emptyPattern = view.findViewById(R.id.isEmpty_card_recycler)
         val fab = view.findViewById<FloatingActionButton>(R.id.card_fab)
         db.initDatabase()
 
@@ -102,10 +105,16 @@ class CardFragment : Fragment() {
 
                 arrayData.reverse()
                 adapter = CardAdapter(arrayData, context!!, getRoomId(), this@CardFragment)
-                recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = context?.let { adapter }
-                var itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallBack(adapter))
-                itemTouchHelper.attachToRecyclerView(recycler)
+                if(adapter .itemCount == 0){
+                    emptyPattern.visibility = View.VISIBLE
+                }else{
+                    emptyPattern.visibility = View.GONE
+                    recycler.layoutManager = LinearLayoutManager(context)
+                    recycler.adapter = context?.let { adapter }
+                    var itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallBack(adapter))
+                    itemTouchHelper.attachToRecyclerView(recycler)
+                }
+
             }
         })
 

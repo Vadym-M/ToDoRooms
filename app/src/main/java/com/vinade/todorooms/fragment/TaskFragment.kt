@@ -57,6 +57,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TaskFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class TaskFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -85,7 +86,7 @@ class TaskFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
