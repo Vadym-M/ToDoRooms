@@ -6,6 +6,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +17,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -38,6 +40,9 @@ import com.vinade.todorooms.adapter.TaskAdapter
 import com.vinade.todorooms.model.ItemTask
 import com.vinade.todorooms.model.Task
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -198,7 +203,7 @@ class TaskFragment : Fragment() {
 
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showFields(createBtn: Button) {
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -220,9 +225,9 @@ class TaskFragment : Fragment() {
 
             val task = Task(createTaskTitle.text.toString())
             task.initId()
-            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-            val currentDate = sdf.format(Date())
-            task.timestamp = currentDate
+            val currentDateTime = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy", Locale.ENGLISH))
+            task.timestamp = currentDateTime
             createTask(task)
 
             Handler(Looper.getMainLooper()).postDelayed({
@@ -306,6 +311,7 @@ class TaskFragment : Fragment() {
                 TODO("not implemented")
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayList.clear()
                 listTask.clear()
@@ -316,7 +322,16 @@ class TaskFragment : Fragment() {
                     listTask.add(task!!)
 
                 }
-                listTask.sortBy { it.timestamp }
+                val dateTimeStrToLocalDateTime: (String) -> LocalDateTime = {
+                    LocalDateTime.parse(it, DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy"))
+                }
+
+                listTask.sortWith(compareBy ({dateTimeStrToLocalDateTime(it.timestamp).year},
+                    {dateTimeStrToLocalDateTime(it.timestamp).month},
+                    {dateTimeStrToLocalDateTime(it.timestamp).dayOfWeek},
+                    {dateTimeStrToLocalDateTime(it.timestamp).hour},
+                    {dateTimeStrToLocalDateTime(it.timestamp).minute}))
+
                 listTask.reverse()
                 for(item in listTask){
                     val fList = mutableListOf<ItemTask>()

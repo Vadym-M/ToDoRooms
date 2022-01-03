@@ -3,9 +3,11 @@ package com.vinade.todorooms.fragment
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
@@ -26,6 +28,9 @@ import com.vinade.todorooms.activity.MainActivity
 import com.vinade.todorooms.activity.RoomActivity
 import com.vinade.todorooms.adapter.CardAdapter
 import com.vinade.todorooms.model.Card
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,13 +86,21 @@ class CardFragment : Fragment() {
                 TODO("not implemented")
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(snapshot: DataSnapshot) {
                 arrayData.clear()
                 for (objSnapshot in snapshot.getChildren()) {
                     val card = objSnapshot.getValue<Card>(Card::class.java)
                     arrayData.add(card!!)
                 }
-                arrayData.sortBy { it.dateTime }
+
+                arrayData.sortWith(compareBy ({dateTimeStrToLocalDateTime(it.dateTime).year},
+                    {dateTimeStrToLocalDateTime(it.dateTime).month},
+                    {dateTimeStrToLocalDateTime(it.dateTime).dayOfWeek},
+                    {dateTimeStrToLocalDateTime(it.dateTime).hour},
+                    {dateTimeStrToLocalDateTime(it.dateTime).minute}))
+
+                arrayData.reverse()
                 adapter = CardAdapter(arrayData, context!!, getRoomId(), this@CardFragment)
                 recycler.layoutManager = LinearLayoutManager(context)
                 recycler.adapter = context?.let { adapter }
@@ -97,6 +110,10 @@ class CardFragment : Fragment() {
         })
 
 
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun dateTimeStrToLocalDateTime(str: String):LocalDateTime {
+        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy"))
     }
 
     fun intentToCreateActivity(fab: FloatingActionButton){

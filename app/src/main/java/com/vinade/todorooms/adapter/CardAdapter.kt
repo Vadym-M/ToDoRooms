@@ -60,7 +60,7 @@ class CardAdapter(private val data: ArrayList<Card>, private val context: Contex
 
         val data = dataFilterList[position]
         val t = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalDateTime.parse(data.dateTime, DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy", Locale.ENGLISH))
+            LocalDateTime.parse(data.dateTime, DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy", Locale.ENGLISH))
         } else {
             TODO("VERSION.SDK_INT < O")
         }
